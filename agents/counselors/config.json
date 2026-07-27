@@ -5,32 +5,32 @@
     "outputDir": "./agents/counselors/out",
     "readOnly": "bestEffort",
     "maxContextKb": 50,
-    "maxParallel": 5
+    "maxParallel": 8
   },
   "tools": {
-    "claude-opus-4.6": {
-      "binary": "/opt/homebrew/bin/claude",
+    "claude-opus-5": {
+      "binary": "/Users/carlassmann/.local/bin/claude",
       "adapter": "claude",
       "readOnly": {
         "level": "enforced"
       },
       "extraFlags": [
         "--model",
-        "claude-opus-4-6"
+        "claude-opus-5"
       ]
     },
-    "claude-opus-4.8": {
-      "binary": "/opt/homebrew/bin/claude",
+    "claude-fable-5": {
+      "binary": "/Users/carlassmann/.local/bin/claude",
       "adapter": "claude",
       "readOnly": {
         "level": "enforced"
       },
       "extraFlags": [
         "--model",
-        "claude-opus-4-8"
+        "claude-fable-5"
       ]
     },
-    "codex-gpt-5.5": {
+    "codex-gpt-5.6-sol": {
       "binary": "/opt/homebrew/bin/codex",
       "adapter": "codex",
       "readOnly": {
@@ -38,21 +38,10 @@
       },
       "extraFlags": [
         "-m",
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
-    "codex-gpt-5.4": {
-      "binary": "/opt/homebrew/bin/codex",
-      "adapter": "codex",
-      "readOnly": {
-        "level": "enforced"
-      },
-      "extraFlags": [
-        "-m",
-        "gpt-5.4"
-      ]
-    },
-    "opencode-go-kimi-k2.6": {
+    "opencode-go-glm-5.2": {
       "binary": "/Users/carlassmann/.bun/bin/opencode",
       "readOnly": {
         "level": "bestEffort",
@@ -65,11 +54,11 @@
       "extraFlags": [
         "run",
         "-m",
-        "opencode-go/kimi-k2.6"
+        "opencode-go/glm-5.2"
       ],
       "custom": true
     },
-    "opencode-go-glm-5.1": {
+    "opencode-go-kimi-k3": {
       "binary": "/Users/carlassmann/.bun/bin/opencode",
       "readOnly": {
         "level": "bestEffort",
@@ -82,19 +71,23 @@
       "extraFlags": [
         "run",
         "-m",
-        "opencode-go/glm-5.1"
+        "opencode-go/kimi-k3"
       ],
       "custom": true
     }
   },
   "groups": {
     "council": [
-      "claude-opus-4.6",
-      "claude-opus-4.8",
-      "codex-gpt-5.5",
-      "codex-gpt-5.4",
-      "opencode-go-kimi-k2.6",
-      "opencode-go-glm-5.1"
+      "claude-opus-5",
+      "claude-fable-5",
+      "codex-gpt-5.6-sol",
+      "opencode-go-glm-5.2",
+      "opencode-go-kimi-k3"
+    ],
+    "review": [
+      "claude-fable-5",
+      "codex-gpt-5.6-sol",
+      "opencode-go-kimi-k3"
     ]
   }
 }
