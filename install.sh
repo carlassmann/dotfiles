@@ -7,11 +7,6 @@ DOTFILES_DIR="$HOME/Developer/dotfiles"
 echo "🚀 Installing dotfiles..."
 
 # Create necessary directories
-mkdir -p "$HOME/.config/helix"
-mkdir -p "$HOME/.config/ghostty"
-mkdir -p "$HOME/.config/tmux/themes"
-mkdir -p "$HOME/.config/pi"
-mkdir -p "$HOME/.pi/agent"
 mkdir -p "$HOME/.config/secrets"
 
 # Function to create symlink
@@ -168,12 +163,16 @@ create_symlink "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 create_symlink "$DOTFILES_DIR/tmux/.config/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 create_symlink "$DOTFILES_DIR/tmux/.config/tmux/themes" "$HOME/.config/tmux/themes"
 create_symlink "$DOTFILES_DIR/tmux/.config/tmux/README.md" "$HOME/.config/tmux/README.md"
-create_symlink "$DOTFILES_DIR/agents/claude" "$HOME/.claude"
+
+# Claude reads ~/.claude — link tracked config individually so runtime data
+# (projects, history, tasks) stays out of the repo
+create_symlink "$DOTFILES_DIR/agents/claude/settings.json" "$HOME/.claude/settings.json"
+create_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"
+create_symlink "$DOTFILES_DIR/agents/skills" "$HOME/.claude/skills"
 
 # Codex picks up AGENTS.md and skills/ from ~/.codex
 create_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"
 create_symlink "$DOTFILES_DIR/agents/skills" "$HOME/.codex/skills"
-create_symlink "$DOTFILES_DIR/agents/codex/config.toml" "$HOME/.codex/config.toml"
 
 # Opencode reads ~/.config/opencode — link tracked files individually so opencode
 # can still write generated files (bun.lock, node_modules) into the same dir
@@ -181,7 +180,6 @@ create_symlink "$DOTFILES_DIR/agents/opencode/AGENTS.md" "$HOME/.config/opencode
 create_symlink "$DOTFILES_DIR/agents/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
 create_symlink "$DOTFILES_DIR/agents/opencode/package.json" "$HOME/.config/opencode/package.json"
 create_symlink "$DOTFILES_DIR/agents/opencode/agent" "$HOME/.config/opencode/agent"
-create_symlink "$DOTFILES_DIR/agents/opencode/plugins" "$HOME/.config/opencode/plugins"
 create_symlink "$DOTFILES_DIR/agents/opencode/skills" "$HOME/.config/opencode/skills"
 create_symlink "$DOTFILES_DIR/agents/counselors/config.json" "$HOME/.config/counselors/config.json"
 

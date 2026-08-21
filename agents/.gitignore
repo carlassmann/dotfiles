@@ -2,6 +2,5 @@ skills/.system
 skills/emil*
 skills/ui
 skills/motion
-claude/*
-codex/*
+claude/settings.local.json
 counselors/out
