@@ -26,7 +26,6 @@ alias l="ls -lah"
 alias lg="lazygit"
 alias ld="lazydocker"
 alias oc="opencode"
-alias cc="claude --dangerously-skip-permissions --model claude-opus-4-6"
 alias reload="source ~/.zshrc"
 alias c="clear"
 alias ..="cd .."
@@ -42,7 +41,6 @@ alias cpwd="pwd | pbcopy"
 alias prx="pr-review"
 
 alias ttg="ttab git lazygit"
-alias tta="ttab agent pi"
 
 # show path entries one per line
 alias path='echo $PATH | tr ":" "\n"'

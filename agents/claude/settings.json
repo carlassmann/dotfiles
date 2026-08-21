@@ -1,0 +1,62 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "claude-fable-5[1m]",
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": [
+      "Brezeling",
+      "Zapfing",
+      "Tramming",
+      "Eisbaching",
+      "Maßing",
+      "Weißwursting",
+      "Obatzing",
+      "Radlering",
+      "Schweinsbrating",
+      "Leberkäsing",
+      "Schmankerling",
+      "Biergartening",
+      "Hofbräuing",
+      "Augustinering",
+      "Paulanering",
+      "Wiesning",
+      "Oktoberfesting",
+      "Lederhosing",
+      "Dirndling",
+      "Schuhplattling",
+      "Glockenspieling",
+      "Marienplatzing",
+      "Viktualienmarkting",
+      "Schwabinging",
+      "Giesinging",
+      "Sendlinging",
+      "Haidhausing",
+      "Pasinging",
+      "Stachusing",
+      "Frauenkirching",
+      "Olympiaparking",
+      "Englischgartening",
+      "Kaiserschmarrning",
+      "Glühweining",
+      "Apfelschorling",
+      "S-Bahning",
+      "U-Bahning"
+    ]
+  },
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}

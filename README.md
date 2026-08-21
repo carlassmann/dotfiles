@@ -50,8 +50,7 @@ bun add -g \
   @tailwindcss/language-server \
   @astrojs/language-server \
   vscode-langservers-extracted \
-  opencode-ai \
-  @mariozechner/pi-coding-agent
+  opencode-ai
 ```
 
 ### Fonts
@@ -94,17 +93,14 @@ Your `~/.zshrc` sources this file automatically.
 - `~/.config/ghostty/config` → `ghostty/config`
 - `~/.config/tmux/tmux.conf` → `tmux/.config/tmux/tmux.conf`
 - `~/.config/tmux/themes` → `tmux/.config/tmux/themes`
-- `~/.config/xplr/` → `xplr/`
-- `~/.config/md-ai/config.json` → `md-ai/config.json`
-- `~/.config/md-ai/SYSTEM.md` → `md-ai/SYSTEM.md`
-- `~/.config/opencode/opencode.json` → `opencode/opencode.json`
-- `~/.config/opencode/agent` → `agents/opencode/agent`
-- `~/.config/counselors/config.json` → `agents/counselors/config.json`
-- `~/.config/opencode/AGENTS.md` → `agents/AGENTS.md`
-- `~/.config/opencode/skills` → `agents/skills`
+- `~/.claude/settings.json` → `agents/claude/settings.json`
 - `~/.claude/CLAUDE.md` → `agents/AGENTS.md`
 - `~/.claude/skills` → `agents/skills`
-- `~/.claude/settings.local.json` → `.claude/settings.local.json`
 - `~/.codex/AGENTS.md` → `agents/AGENTS.md`
 - `~/.codex/skills` → `agents/skills`
-- `~/.codex/config.toml` → `agents/codex/config.toml`
+- `~/.config/opencode/AGENTS.md` → `agents/opencode/AGENTS.md`
+- `~/.config/opencode/opencode.json` → `agents/opencode/opencode.json`
+- `~/.config/opencode/package.json` → `agents/opencode/package.json`
+- `~/.config/opencode/agent` → `agents/opencode/agent`
+- `~/.config/opencode/skills` → `agents/skills`
+- `~/.config/counselors/config.json` → `agents/counselors/config.json`
