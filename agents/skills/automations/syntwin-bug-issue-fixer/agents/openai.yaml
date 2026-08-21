@@ -1,0 +1,7 @@
+interface:
+  display_name: "Syntwin Bug Issue Fixer"
+  short_description: "Run the scheduled bug-fixing workflow"
+  default_prompt: "Use $syntwin-bug-issue-fixer to run the scheduled bug-fixing workflow."
+
+policy:
+  allow_implicit_invocation: false

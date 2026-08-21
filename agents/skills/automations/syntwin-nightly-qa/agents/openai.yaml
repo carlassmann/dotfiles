@@ -1,0 +1,7 @@
+interface:
+  display_name: "Syntwin Nightly QA"
+  short_description: "Run the scheduled exploratory QA workflow"
+  default_prompt: "Use $syntwin-nightly-qa to run the scheduled exploratory QA workflow."
+
+policy:
+  allow_implicit_invocation: false

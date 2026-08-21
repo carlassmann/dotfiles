@@ -1,0 +1,7 @@
+interface:
+  display_name: "Syntwin Dependency Bot"
+  short_description: "Run the scheduled dependency adoption workflow"
+  default_prompt: "Use $syntwin-dependency-bot to run the scheduled dependency adoption workflow."
+
+policy:
+  allow_implicit_invocation: false
