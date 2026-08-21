@@ -4,7 +4,7 @@
 
 ```bash
 # clone repo
-git clone https://github.com/ccssmnn/dotfiles ~/Developer/dotfiles
+git clone https://github.com/carlassmann/dotfiles ~/Developer/dotfiles
 cd ~/Developer/dotfiles
 
 # run automated install
