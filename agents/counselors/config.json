@@ -19,17 +19,6 @@
         "claude-opus-5"
       ]
     },
-    "claude-fable-5": {
-      "binary": "/Users/carlassmann/.local/bin/claude",
-      "adapter": "claude",
-      "readOnly": {
-        "level": "enforced"
-      },
-      "extraFlags": [
-        "--model",
-        "claude-fable-5"
-      ]
-    },
     "codex-gpt-5.6-sol": {
       "binary": "/opt/homebrew/bin/codex",
       "adapter": "codex",
@@ -41,7 +30,7 @@
         "gpt-5.6-sol"
       ]
     },
-    "opencode-go-glm-5.2": {
+    "opencode-go-hy3": {
       "binary": "/Users/carlassmann/.bun/bin/opencode",
       "readOnly": {
         "level": "bestEffort",
@@ -54,11 +43,11 @@
       "extraFlags": [
         "run",
         "-m",
-        "opencode-go/glm-5.2"
+        "opencode-go/hy3"
       ],
       "custom": true
     },
-    "opencode-go-kimi-k3": {
+    "opencode-go-deepseek-v4-flash": {
       "binary": "/Users/carlassmann/.bun/bin/opencode",
       "readOnly": {
         "level": "bestEffort",
@@ -71,7 +60,24 @@
       "extraFlags": [
         "run",
         "-m",
-        "opencode-go/kimi-k3"
+        "opencode-go/deepseek-v4-flash"
+      ],
+      "custom": true
+    },
+    "opencode-go-glm-5.3-flash": {
+      "binary": "/Users/carlassmann/.bun/bin/opencode",
+      "readOnly": {
+        "level": "bestEffort",
+        "flags": [
+          "--agent",
+          "counselor",
+          "--dangerously-skip-permissions"
+        ]
+      },
+      "extraFlags": [
+        "run",
+        "-m",
+        "opencode-go/glm-5.3-flash"
       ],
       "custom": true
     }
@@ -79,15 +85,10 @@
   "groups": {
     "council": [
       "claude-opus-5",
-      "claude-fable-5",
       "codex-gpt-5.6-sol",
-      "opencode-go-glm-5.2",
-      "opencode-go-kimi-k3"
-    ],
-    "review": [
-      "claude-fable-5",
-      "codex-gpt-5.6-sol",
-      "opencode-go-kimi-k3"
+      "opencode-go-hy3",
+      "opencode-go-deepseek-v4-flash",
+      "opencode-go-glm-5.3-flash"
     ]
   }
 }
