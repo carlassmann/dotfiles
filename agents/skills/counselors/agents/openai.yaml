@@ -1,0 +1,6 @@
+interface:
+  display_name: "Counselors"
+  short_description: "Get independent views from different AI models"
+  default_prompt: "Use $counselors to get independent broad reviews from a heterogeneous model council."
+policy:
+  allow_implicit_invocation: false

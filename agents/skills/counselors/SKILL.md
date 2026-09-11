@@ -9,6 +9,8 @@ description: Get parallel second opinions from multiple AI coding agents. Use wh
 
 Fan out a prompt to multiple AI coding agents in parallel and synthesize their responses.
 
+The value comes from intrinsic differences between model families and agent harnesses. Prefer heterogeneous reviewers, give every reviewer the same broad question and context, and keep their first passes blind to one another. Do not specialize reviewers into narrow roles. Preserve disagreement and minority views instead of majority-voting them away.
+
 Use `run` for single-shot parallel review, or `loop` for iterative multi-round analysis.
 
 Arguments: $ARGUMENTS
@@ -58,6 +60,8 @@ Print the output and have them pick a preset.
    counselors ls
    counselors groups ls
    ```
+
+   Prefer a selection spanning different model families and harnesses. Several instances of one model are weaker diversity than independent Claude, Codex, OpenCode, or other available families.
 
    The first command lists all configured agents with their IDs and binaries. The second lists any configured **groups** (predefined sets of tool IDs).
 
@@ -129,6 +133,7 @@ You are providing an independent review. Be critical and thorough.
 - Read the referenced files to understand the full context
 - Focus on relevant source, configuration, and documentation; skip vendor, generated, and binary files
 - Analyze the question in the context provided
+- Review the full question independently; do not assume another reviewer covers any dimension
 - Identify risks, tradeoffs, and blind spots
 - Include file paths for every finding
 - Suggest alternatives if you see better approaches
@@ -266,6 +271,8 @@ The manifest's `rounds` array contains per-round tool reports. `totalRounds` and
 ## Phase 7: Synthesize and Present
 
 Combine all agent responses into a synthesis:
+
+Validate claims against available evidence. Deduplicate overlapping findings, but preserve materially different judgments and well-supported minority concerns. Consensus is context, not a vote.
 
 ```markdown
 ## Counselors Review

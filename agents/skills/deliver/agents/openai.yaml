@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deliver"
+  short_description: "Verify and prepare code for human review"
+  default_prompt: "Use $deliver to verify this implementation and prepare its final pull request."
+policy:
+  allow_implicit_invocation: false

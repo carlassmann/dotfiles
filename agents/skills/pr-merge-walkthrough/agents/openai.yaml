@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Merge Walkthrough"
+  short_description: "Test PRs one-by-one before human merge approval"
+  default_prompt: "Use $pr-merge-walkthrough to process my open pull requests one at a time."

@@ -7,6 +7,8 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "enabledPlugins": {},
+  "extraKnownMarketplaces": {},
   "spinnerVerbs": {
     "mode": "replace",
     "verbs": [
@@ -58,5 +60,11 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "hooks": {"SessionStart":[{"matcher":"*","hooks":[{"type":"command","command":"bash '/Users/carlassmann/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}]}
 }
