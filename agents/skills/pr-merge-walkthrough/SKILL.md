@@ -1,81 +1,84 @@
 ---
 name: pr-merge-walkthrough
-description: Walk through an author's open pull requests one at a time, oldest first, testing and preparing each for a human merge decision. Use when triaging or clearing a PR queue collaboratively. Do not use for autonomous bulk merging.
+description: Go through pull requests that need a decision, one at a time. Summarize what each one changes about the product, try it in the running app, and leave a browser open at the spot where the user can look at it. Do not use for autonomous bulk merging.
 ---
 
 # PR merge walkthrough
 
-Prepare one trustworthy merge decision at a time. Never merge the PR.
+Make it cheap for the user to decide on a PR. Never merge. Never push unless asked.
 
-## Establish the queue
+## Pick the PR
 
-Infer or confirm the author, ordering, exclusions, and review preference from the conversation. Preserve these choices for later "next PR" requests.
+Default to PRs needing the user's attention: review-requested, assigned, or mentioned. Oldest first, drafts skipped. Use the user's own PRs instead when they say so, and keep that choice for later "next PR" requests.
 
-- List open PRs by the selected author, oldest first.
-- Apply exclusions such as billing work or experiments.
-- Never include another author's PR without permission.
-- Process exactly one eligible PR, then stop.
-- Say when no eligible PR remains.
+List the queue once, one line each. Then take the first PR and stop there.
 
-## Understand before changing
+## Read it
 
-Read the PR, linked issues and acceptance criteria, full diff, current base, checks, and relevant surrounding code.
+Read the PR, its linked issue, the full diff, current base, and checks.
 
-Check whether merged work already supersedes the PR. Compare behavior and implementation, not titles alone. If it is redundant, verify the overlap, show the user, recommend closing, and leave the remote branch untouched.
+Say what it does in product terms, not file terms: what can a user now do, see, or stop hitting. If merged work already covers it, show the overlap and suggest closing.
 
-## Run the branch
+Then decide which kind it is:
 
-Use the repository's workspace tooling to create and run an isolated checkout. In projects configured for `work`, use it for setup, services, URLs, logs, and teardown.
+- Product-visible. UI, copy, flows, API responses. Try it and set up the browser.
+- Internal only. Refactors, infra, types, tests. Reason about it, run the checks, and say there is nothing to look at.
 
-Integrate the current base using repository conventions. Distinguish:
+## Run it
 
-- textual conflicts Git reports;
-- semantic conflicts where both changes survive but produce duplicate or contradictory behavior;
-- unrelated base changes that need no decision.
+Work in the current worktree and reuse it for every PR in the walkthrough. Do not create one per PR.
 
-Before resolving a meaningful conflict, tell the user which behaviors compete and what to inspect. Preserve the current product behavior unless the PR intentionally replaces it.
+Check out the PR branch here, and use `work` for the dev server, services, URLs, and logs. Leave those running between PRs and restart only when the branch needs it. Before switching branches, drop the last PR's local merge and leave the tree clean.
 
-## Verify the outcome
+Merge current base in locally. Three things can turn up:
 
-Use `test-guidance` for all test decisions.
+- conflicts git reports
+- conflicts git does not report, where both changes survive and the result is duplicated or contradictory
+- unrelated base changes that need no decision
 
-- Exercise the intended behavior personally in the real runtime.
-- Use focused automated coverage at the cheapest useful tier.
-- For UI changes, inspect desktop and mobile and capture fresh screenshots.
-- Follow the browser skill when controlling a browser.
-- Use disposable test accounts when needed and delete them afterward.
-- Remove temporary tests, fixtures, accounts, services, and screenshot files before finishing.
+Before resolving anything meaningful, say which behaviors collide. Keep current product behavior unless the PR means to replace it.
 
-Do not treat passing tests as personal runtime verification. Report separately:
+## Try it yourself
 
-- what was personally exercised;
-- what automated checks covered;
-- what the user may still want to inspect.
+Confirm it works by watching it work. A green test suite is not that.
 
-If something fails, determine whether the PR caused it, current base caused it, or the local environment is broken. Fix only work within the PR's scope.
+- Drive the app to the state the PR touches and do the thing a user would do.
+- Do the same on base when the question is whether anything actually changed.
+- For UI, check desktop and mobile, and take fresh screenshots.
+- Follow the browser skill when driving a browser.
+- Use `test-guidance` for test decisions, at the cheapest tier that helps.
+- Use throwaway accounts and seed data when needed, and say what you created.
 
-## Prepare a useful PR
+When something breaks, work out whether the PR, the base, or the local setup caused it. Report it instead of quietly fixing it.
 
-If the PR still adds value, resolve its conflicts and remaining in-scope defects. Respect an explicit request to skip formal review. Otherwise use the repository's normal review gate.
+Keep three things apart in the report: what you tried, what the checks covered, what nobody verified.
 
-After material changes:
+## Set up the browser
 
-1. Apply `pr-writing` and `unslop` to reconcile the description with the full diff.
-2. Push the final commit.
-3. Run `bun run ci` against that exact pushed commit when the repository uses this signoff command.
-4. Confirm GitHub reports the PR mergeable and checks apply to the final commit.
+For product-visible changes, leave everything running and parked on the change.
 
-Never claim a stale check or an unpushed local run as final CI signoff. Do not push or sign CI for a PR that should close as redundant.
+- Keep the app and the browser up until the user moves on.
+- Open the exact screen where the change shows, with the seed data or test account already in place.
+- If it only shows up in a specific state, a flag, a role, an empty list, an error, set that state up instead of describing it.
+- Then tell the user how to look: the URL, the account, the clicks from where they are, what to watch for, and what it looked like before.
 
-## Hand back the decision
+Leave the screenshots, accounts, and services alone while the user still needs them. Clean up when leaving the PR.
 
-Explain concisely:
+## Hand it back
 
-- what the PR adds or fixes;
-- conflicts and their resolution;
-- runtime and automated verification;
-- fresh screenshots for UI work;
-- remaining work or caveats;
-- whether to merge, revise, skip, or close.
+Keep it short:
 
-Stop before merging. Continue only after the user chooses or asks for the next PR.
+- what the PR changes about the product
+- conflicts and how you would resolve them
+- what you tried and what you saw
+- how to look at it
+- what is left, risky, or unclear
+- a call: merge, revise, skip, or close
+
+Then stop. Offer to fix in-scope defects and conflicts, but only write code, push, or edit the PR description when asked. If asked:
+
+1. Use `pr-writing` and `unslop` to match the description to the diff.
+2. Push, then run the repo's signoff checks on that pushed commit.
+3. Confirm GitHub calls the PR mergeable and the checks belong to the final commit.
+
+A stale check or a local run is not CI signoff. Wait for the user to decide or ask for the next PR.
