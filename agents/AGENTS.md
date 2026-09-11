@@ -5,6 +5,20 @@ In all interactions, be extremely (!!!) concise and sacrifice grammar for the sa
 At the end of each plan, give me a list of unresolved questions to answer, if any.
 Make the questions extremely concise.
 
+## Product development
+
+Prefer learning through small, realistic implementations over extended speculative design.
+Prefer experiments over speculative architecture discussion.
+
+When architecture is uncertain:
+
+1. Build the smallest reversible vertical slice.
+2. Exercise it in the real runtime.
+3. Summarize what was learned.
+4. Decide the architecture before hardening.
+
+Do not block implementation on questions answerable through a cheap experiment. Do not let exploratory code become production architecture without consciously reviewing it.
+
 ## External Reference Repositories
 
 You have read access to local reference repositories located at `.reference/*`. 
