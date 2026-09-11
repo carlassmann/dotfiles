@@ -11,18 +11,27 @@ Make it cheap for the user to decide on a PR. Never merge. Never push unless ask
 
 Default to PRs needing the user's attention: review-requested, assigned, or mentioned. Oldest first, drafts skipped. Use the user's own PRs instead when they say so, and keep that choice for later "next PR" requests.
 
-List the queue once, one line each. Then take the first PR and stop there.
+List the queue once, one line each, with the PR's URL on every line. Then take the first PR and stop there.
 
 ## Read it
 
-Read the PR, its linked issue, the full diff, current base, and checks.
+Reading is parallel work. Fan out subagents, one prompt each, at the same time:
 
-Say what it does in product terms, not file terms: what can a user now do, see, or stop hitting. If merged work already covers it, show the overlap and suggest closing.
+- summarize the diff in product terms and name the screens or endpoints it touches
+- check whether merged work already covers it, and whether it collides with another open PR in the queue
+- review the diff for defects worth mentioning in the decision, using `code-review`
+- dig out the linked issue, acceptance criteria, prior review comments, and CI failures
+
+Give each the PR number and branch, and ask for a short answer, not a report. Treat what comes back as a claim to check against the diff yourself. Skip the fan-out when the diff is small or obvious.
+
+Out of that, say what the PR does in product terms, not file terms: what can a user now do, see, or stop hitting. If merged work already covers it, show the overlap and suggest closing.
 
 Then decide which kind it is:
 
 - Product-visible. UI, copy, flows, API responses. Try it and set up the browser.
 - Internal only. Refactors, infra, types, tests. Reason about it, run the checks, and say there is nothing to look at.
+
+Everything after this stays with you. The worktree, the running app, and the browser are one sequential thing, and a subagent cannot hand the user a browser tab.
 
 ## Run it
 
@@ -66,13 +75,14 @@ Leave the screenshots, accounts, and services alone while the user still needs t
 
 ## Hand it back
 
-Keep it short:
+Keep it short, and lead with the PR's URL so the user can open it:
 
 - what the PR changes about the product
 - conflicts and how you would resolve them
 - what you tried and what you saw
-- how to look at it
+- how to look at it, with the local URL
 - what is left, risky, or unclear
+- links for anything you cite: the linked issue, a superseding PR, a failing check
 - a call: merge, revise, skip, or close
 
 Then stop. Offer to fix in-scope defects and conflicts, but only write code, push, or edit the PR description when asked. If asked:

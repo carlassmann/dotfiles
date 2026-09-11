@@ -1,10 +1,5 @@
 In all interactions, be extremely (!!!) concise and sacrifice grammar for the sake of concision
 
-## Planning
-
-At the end of each plan, give me a list of unresolved questions to answer, if any.
-Make the questions extremely concise.
-
 ## Product development
 
 Prefer learning through small, realistic implementations over extended speculative design.
@@ -54,3 +49,7 @@ Avoid comments. Instead take advantage of variable names and function encapsulat
 to create code that is nice to read.
 Then there is no reason to explain WHAT the code is doing anymore.
 If not obvious, you still can add comments that explain WHY code is there.
+
+## Browser
+
+Always use the browser via the `agent-browser` CLI. Do not use any other browser unless specifically asked to. Always use the `agent-browser` in the background, unless specifically asked to.
