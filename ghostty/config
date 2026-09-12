@@ -6,8 +6,7 @@ adjust-cell-height = 50%
 
 cursor-style-blink = false
 
-window-width = 3000
-window-height = 2000
+maximize = true
 window-padding-balance = true
 window-padding-color = extend
 

@@ -1,194 +1,115 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-DOTFILES_DIR="$HOME/Developer/dotfiles"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "🚀 Installing dotfiles..."
-
-# Create necessary directories
-mkdir -p "$HOME/.config/secrets"
-
-# Function to create symlink
-create_symlink() {
-  local source="$1"
+link() {
+  local source="$DOTFILES_DIR/$1"
   local target="$2"
 
   if [ -L "$target" ]; then
     if [ "$(readlink "$target")" = "$source" ]; then
-      echo "✓ Already linked $target"
+      echo "✓ $target"
       return 0
     fi
-
-    rm -rf "$target"
+    rm "$target"
   elif [ -e "$target" ]; then
-    echo "- Skipped $target (not a symlink)"
+    echo "- skipped $target (exists, not a symlink)"
     return 0
   fi
 
   mkdir -p "$(dirname "$target")"
-  ln -sf "$source" "$target"
-  echo "✓ Linked $target"
+  ln -s "$source" "$target"
+  echo "✓ $target"
 }
 
-SECRETS_FILE="$HOME/.config/secrets/env"
-SECRETS_MANIFEST="$DOTFILES_DIR/agents/secrets.required"
+install_homebrew_bundle() {
+  if ! command -v brew >/dev/null 2>&1; then
+    echo "- homebrew missing, skipping Brewfile (install from https://brew.sh)"
+    return 0
+  fi
+  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-upgrade
+}
+
+install_bun_globals() {
+  command -v bun >/dev/null 2>&1 || return 0
+  bun add -g \
+    @opencode/cli \
+    @ccssmnn/work-cli \
+    counselors \
+    agent-browser \
+    prettier \
+    prettier-plugin-tailwindcss \
+    typescript \
+    typescript-language-server \
+    vscode-langservers-extracted \
+    @tailwindcss/language-server
+}
+
+install_herdr() {
+  command -v herdr >/dev/null 2>&1 && return 0
+  curl -fsSL https://herdr.dev/install.sh | sh
+}
 
 ensure_secrets_file() {
-  touch "$SECRETS_FILE"
-  chmod 600 "$SECRETS_FILE"
+  mkdir -p "$HOME/.config/secrets"
+  touch "$HOME/.config/secrets/env"
+  chmod 600 "$HOME/.config/secrets/env"
 }
 
-get_secret_value() {
-  local key="$1"
-  local line
-  line=$(grep -E "^export ${key}=" "$SECRETS_FILE" | tail -n 1 || true)
-  line="${line#export ${key}=}"
-  line="${line#\"}"
-  line="${line%\"}"
-  echo "$line"
-}
+echo "🚀 linking dotfiles from $DOTFILES_DIR"
 
-set_secret_value() {
-  local key="$1"
-  local value="$2"
-  local escaped="$value"
-  escaped="${escaped//\\/\\\\}"
-  escaped="${escaped//\"/\\\"}"
+link zsh/.zshrc "$HOME/.zshrc"
+link zsh/.zshenv "$HOME/.zshenv"
 
-  local tmp
-  tmp=$(mktemp)
-  awk -v key="$key" -v value="$escaped" '
-    BEGIN { replaced = 0 }
-    {
-      if ($0 ~ "^export " key "=") {
-        if (!replaced) {
-          print "export " key "=\"" value "\""
-          replaced = 1
-        }
-      } else {
-        print $0
-      }
-    }
-    END {
-      if (!replaced) {
-        print "export " key "=\"" value "\""
-      }
-    }
-  ' "$SECRETS_FILE" > "$tmp"
-  mv "$tmp" "$SECRETS_FILE"
-  chmod 600 "$SECRETS_FILE"
-}
+link git/.gitconfig "$HOME/.gitconfig"
+link git/.gitignore_global "$HOME/.gitignore_global"
 
-prompt_secret() {
-  local key="$1"
-  local description="$2"
-  local current
-  current=$(get_secret_value "$key")
-
-  if [ -n "$current" ] && [ "$current" != "REPLACE_ME" ]; then
-    echo "✓ Secret already set: $key"
-    return 0
-  fi
-
-  if [ ! -r /dev/tty ]; then
-    echo "- No TTY for secret prompt. Leaving placeholder for $key"
-    set_secret_value "$key" "REPLACE_ME"
-    return 0
-  fi
-
-  echo "" > /dev/tty
-  echo "🔐 Required secret: $key" > /dev/tty
-  echo "   $description" > /dev/tty
-
-  local value
-  while true; do
-    read -r -s -p "Enter value for $key (or type 'skip'): " value < /dev/tty
-    echo "" > /dev/tty
-
-    if [ "$value" = "skip" ]; then
-      echo "- Skipped $key (set it later in $SECRETS_FILE)"
-      set_secret_value "$key" "REPLACE_ME"
-      return 0
-    fi
-
-    if [ -z "$value" ]; then
-      echo "- Value cannot be empty"
-      continue
-    fi
-
-    set_secret_value "$key" "$value"
-    echo "✓ Saved $key in $SECRETS_FILE"
-    return 0
-  done
-}
-
-setup_required_secrets() {
-  ensure_secrets_file
-
-  if [ ! -f "$SECRETS_MANIFEST" ]; then
-    echo "- No secrets manifest found at $SECRETS_MANIFEST"
-    return 0
-  fi
-
-  while IFS='|' read -r key description; do
-    if [ -z "$key" ]; then
-      continue
-    fi
-
-    case "$key" in
-      \#*)
-        continue
-        ;;
-    esac
-
-    prompt_secret "$key" "$description"
-  done < "$SECRETS_MANIFEST"
-}
-
-# Symlink shell configs
-create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
-create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
-
-# Symlink git configs
-create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
-create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
-
-# Symlink Aerospace config
-create_symlink "$DOTFILES_DIR/aerospace/aerospace.toml" "$HOME/.aerospace.toml"
-
-# Symlink .config directories
-create_symlink "$DOTFILES_DIR/helix" "$HOME/.config/helix"
-create_symlink "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
-create_symlink "$DOTFILES_DIR/tmux/.config/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
-create_symlink "$DOTFILES_DIR/tmux/.config/tmux/themes" "$HOME/.config/tmux/themes"
-create_symlink "$DOTFILES_DIR/tmux/.config/tmux/README.md" "$HOME/.config/tmux/README.md"
+link aerospace/aerospace.toml "$HOME/.aerospace.toml"
+link helix "$HOME/.config/helix"
+link ghostty/config "$HOME/.config/ghostty/config"
+link herdr/config.toml "$HOME/.config/herdr/config.toml"
+link lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 
 # Claude reads ~/.claude — link tracked config individually so runtime data
 # (projects, history, tasks) stays out of the repo
-create_symlink "$DOTFILES_DIR/agents/claude/settings.json" "$HOME/.claude/settings.json"
-create_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"
-create_symlink "$DOTFILES_DIR/agents/skills" "$HOME/.claude/skills"
+link agents/claude/settings.json "$HOME/.claude/settings.json"
+link agents/AGENTS.md "$HOME/.claude/CLAUDE.md"
+link agents/skills "$HOME/.claude/skills"
 
 # Codex picks up AGENTS.md and skills/ from ~/.codex
-create_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"
-create_symlink "$DOTFILES_DIR/agents/skills" "$HOME/.codex/skills"
+link agents/AGENTS.md "$HOME/.codex/AGENTS.md"
+link agents/skills "$HOME/.codex/skills"
 
 # Opencode reads ~/.config/opencode — link tracked files individually so opencode
 # can still write generated files (bun.lock, node_modules) into the same dir
-create_symlink "$DOTFILES_DIR/agents/opencode/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
-create_symlink "$DOTFILES_DIR/agents/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
-create_symlink "$DOTFILES_DIR/agents/opencode/package.json" "$HOME/.config/opencode/package.json"
-create_symlink "$DOTFILES_DIR/agents/opencode/agent" "$HOME/.config/opencode/agent"
-create_symlink "$DOTFILES_DIR/agents/opencode/skills" "$HOME/.config/opencode/skills"
-create_symlink "$DOTFILES_DIR/agents/counselors/config.json" "$HOME/.config/counselors/config.json"
+link agents/opencode/AGENTS.md "$HOME/.config/opencode/AGENTS.md"
+link agents/opencode/opencode.json "$HOME/.config/opencode/opencode.json"
+link agents/opencode/package.json "$HOME/.config/opencode/package.json"
+link agents/opencode/agent "$HOME/.config/opencode/agent"
+link agents/opencode/skills "$HOME/.config/opencode/skills"
 
-setup_required_secrets
+link agents/counselors/config.json "$HOME/.config/counselors/config.json"
+
+# Pi stores runtime data beside config — link tracked files individually
+link agents/pi/keybindings.json "$HOME/.pi/agent/keybindings.json"
+link agents/pi/extensions "$HOME/.pi/agent/extensions"
+
+ensure_secrets_file
+
+if [ "${1:-}" = "--full" ]; then
+  install_homebrew_bundle
+  install_bun_globals
+  install_herdr
+  bash "$DOTFILES_DIR/macos/defaults.sh"
+fi
 
 echo ""
-echo "✅ Dotfiles installed successfully!"
+echo "✅ done"
 echo ""
-echo "Next steps:"
-echo "  1. Install Homebrew packages (see README.md)"
-echo "  2. Install Node.js via fnm"
-echo "  3. Restart your terminal or run: source ~/.zshrc"
+echo "next:"
+echo "  ./install.sh --full   brew bundle, bun globals, herdr, macOS defaults (new machine)"
+echo "  fnm install --lts     node"
+echo "  put secrets in ~/.config/secrets/env"
+echo "  exec zsh"

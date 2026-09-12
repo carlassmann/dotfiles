@@ -1,10 +1,5 @@
 {
   "name": "@ccssmnn/scripts",
-  "private": "true",
-  "type": "module",
-  "bin": {
-    "hx-sort": "./bin/sort",
-    "hx-tags": "./bin/tags"
-  },
-  "packageManager": "pnpm@10.10.0"
+  "private": true,
+  "type": "module"
 }

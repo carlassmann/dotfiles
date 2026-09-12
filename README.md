@@ -1,106 +1,80 @@
 # ccssmnn - .dotfiles
 
-## Quick Setup
+## New machine
 
 ```bash
-# clone repo
+xcode-select --install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 git clone https://github.com/carlassmann/dotfiles ~/Developer/dotfiles
 cd ~/Developer/dotfiles
-
-# run automated install
-./install.sh
+./install.sh --full
 ```
 
-## Manual Setup
+`--full` runs `brew bundle` against `Brewfile`, installs bun globals and herdr, and applies `macos/defaults.sh` (keyboard, dock, finder, Hyperkey prefs). Without it, `install.sh` only creates symlinks.
 
-### Homebrew
-
-Install [Homebrew](https://brew.sh)
+Afterwards:
 
 ```bash
-brew install --cask ghostty hyperkey
-brew install --cask nikitabobko/tap/aerospace
-
-brew install \
-  starship \
-  gh \
-  helix \
-  lazygit \
-  lazydocker \
-  zoxide \
-  fzf \
-  tmux \
-  git-delta \
-  marksman \
-  xplr \
-  uv \
-  deno 
+fnm install --lts
+$EDITOR ~/.config/secrets/env   # export KEY="value" per line, sourced by zshenv
+exec zsh
 ```
 
-### NodeJS & Bun
+### Manual checklist
 
-```bash
-bun add -g \
-  typescript \
-  prettier \
-  prettier-plugin-tailwindcss \
-  prettier-plugin-astro \
-  typescript-language-server \
-  @prisma/language-server \
-  @tailwindcss/language-server \
-  @astrojs/language-server \
-  vscode-langservers-extracted \
-  opencode-ai
-```
+Sign in: 1Password, `gh auth login`, `claude`, `codex`, `opencode auth login`, Wispr Flow, browsers.
 
-### Fonts
+Grant in System Settings → Privacy & Security:
 
-I'm using Geist Mono Nerd Font. [Download here](https://www.nerdfonts.com/font-downloads)
+| app | permission |
+| --- | --- |
+| Hyperkey | Accessibility, Input Monitoring |
+| AeroSpace | Accessibility |
+| Wispr Flow | Accessibility, Microphone |
+| 1Password | Accessibility (autofill), browser extension |
+| Ghostty | Full Disk Access (optional) |
 
-### Tmux workflow
+Log out once so keyboard defaults take effect.
 
-- Ghostty shells auto-attach to tmux by default
-- `tj` opens an fzf/zoxide-powered project picker and attaches/creates a session for that project
-- `tj .` attaches/creates a session for the current git repo
-- Inside tmux: `Ctrl-g c` opens a new window, `Ctrl-g s` opens the chooser, `Ctrl-g ,` / `Ctrl-g .` switches windows
+## Layout
 
-### AeroSpace workflow
+| path | linked to |
+| --- | --- |
+| `zsh/.zshenv` | `~/.zshenv` (PATH, env, secrets) |
+| `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases) |
+| `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
+| `git/.gitignore_global` | `~/.gitignore_global` |
+| `aerospace/aerospace.toml` | `~/.aerospace.toml` |
+| `ghostty/config` | `~/.config/ghostty/config` |
+| `herdr/config.toml` | `~/.config/herdr/config.toml` |
+| `lazygit/config.yml` | `~/Library/Application Support/lazygit/config.yml` |
+| `macos/defaults.sh` | run by `install.sh --full`, not linked |
+| `helix/` | `~/.config/helix` |
+| `agents/AGENTS.md` | `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md` |
+| `agents/skills/` | `~/.claude/skills`, `~/.codex/skills`, `~/.config/opencode/skills` |
+| `agents/claude/settings.json` | `~/.claude/settings.json` |
+| `agents/opencode/*` | `~/.config/opencode/*` |
+| `agents/counselors/config.json` | `~/.config/counselors/config.json` |
+| `agents/pi/keybindings.json` | `~/.pi/agent/keybindings.json` |
+| `agents/pi/extensions/` | `~/.pi/agent/extensions` |
+| `scripts/bin/` | on PATH (`pr-review`) |
 
-Hyperkey maps Caps Lock to `Ctrl-Option-Cmd-Shift`.
+## Workflow
 
-- Move a window: press `Hyper-m`, release, then press `h`, `j`, `k`, or `l`
-- Move a window to workspace 1-9: press `Hyper-m`, release, then press the workspace number
-- Move a window to the next monitor: press `Hyper-m`, release, then press `o`
-- Move the workspace to the next monitor: press `Hyper-m`, release, then press `Tab`
-- Cancel move mode: press `Esc`
+- Ghostty is the terminal, herdr manages agent sessions.
+- Helix is used as a file browser, not an IDE. `L d` / `L l` toggle dark / light theme.
+- Hyperkey maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for AeroSpace.
 
-### Secrets
+### AeroSpace
 
-`./install.sh` now prompts for required secrets declared in `agents/secrets.required` and stores them in:
+- Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
+- Move a window: `Hyper-m`, release, then `h/j/k/l`, a workspace number, `o` (next monitor) or `Tab` (whole workspace to next monitor)
+- Resize: `Hyper-r`, then `h/j/k/l`, `Esc`/`Enter` to leave
+- Cancel any mode: `Esc`
 
-- `~/.config/secrets/env` (chmod `600`)
+### Not in Homebrew
 
-Your `~/.zshrc` sources this file automatically.
-
-## What Gets Symlinked
-
-- `~/.zshrc` → `zsh/.zshrc`
-- `~/.zshenv` → `zsh/.zshenv`
-- `~/.gitconfig` → `git/.gitconfig`
-- `~/.gitignore_global` → `git/.gitignore_global`
-- `~/.aerospace.toml` → `aerospace/aerospace.toml`
-- `~/.config/helix/` → `helix/`
-- `~/.config/ghostty/config` → `ghostty/config`
-- `~/.config/tmux/tmux.conf` → `tmux/.config/tmux/tmux.conf`
-- `~/.config/tmux/themes` → `tmux/.config/tmux/themes`
-- `~/.claude/settings.json` → `agents/claude/settings.json`
-- `~/.claude/CLAUDE.md` → `agents/AGENTS.md`
-- `~/.claude/skills` → `agents/skills`
-- `~/.codex/AGENTS.md` → `agents/AGENTS.md`
-- `~/.codex/skills` → `agents/skills`
-- `~/.config/opencode/AGENTS.md` → `agents/opencode/AGENTS.md`
-- `~/.config/opencode/opencode.json` → `agents/opencode/opencode.json`
-- `~/.config/opencode/package.json` → `agents/opencode/package.json`
-- `~/.config/opencode/agent` → `agents/opencode/agent`
-- `~/.config/opencode/skills` → `agents/skills`
-- `~/.config/counselors/config.json` → `agents/counselors/config.json`
+- herdr: installed by `install.sh --full` via `curl -fsSL https://herdr.dev/install.sh | sh`
+- Node via `fnm`
+- `work`, `opencode`, `counselors`, `agent-browser` via bun globals
