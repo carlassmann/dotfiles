@@ -1,0 +1,6 @@
+{
+  "tui.select.up": ["up", "ctrl+p"],
+  "tui.select.down": ["down", "ctrl+n"],
+  "app.tools.expand": [],
+  "app.model.cycleForward": "ctrl+shift+n"
+}

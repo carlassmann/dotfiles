@@ -1,17 +1,10 @@
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.bun/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/Developer/dotfiles/scripts/bin:$PATH"
+
+export BUN_INSTALL="$HOME/.bun"
+export EDITOR="hx"
 
 [ -f "$HOME/.config/secrets/env" ] && source "$HOME/.config/secrets/env"
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-# go (disabled - not installed)
-# export PATH="$PATH:$(go env GOPATH)/bin"
-
-# custom scripts
-export PATH="$PATH:$HOME/Developer/dotfiles/scripts/bin"
+[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"

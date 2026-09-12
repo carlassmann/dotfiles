@@ -1,3 +1,5 @@
 skills/.system
 claude/settings.local.json
 counselors/out
+/skills/ui.sh/
+/skills/animations.dev/

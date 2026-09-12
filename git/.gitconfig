@@ -52,16 +52,21 @@
 [rebase]
 	autoStash = true
 	autoSquash = true
+
 [credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
+
 [credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[coderabbit]
-	machineId = cli/57091634714643ea945baafac01e2c05
+	helper =
+	helper = !gh auth git-credential
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
+# machine-specific state (tool machine ids, per-org identities) lives outside the repo
+[include]
+	path = ~/.gitconfig.local
