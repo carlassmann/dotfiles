@@ -1,55 +1,33 @@
-In all interactions, be extremely (!!!) concise and sacrifice grammar for the sake of concision
+## Communication
+
+Be extremely (!!!) concise. Sacrifice grammar for concision.
+
+In the CLI, print full URLs as plain text. Never hide them behind markdown link text; I can't see or click those.
+
+When writing on my behalf (Slack, GitHub, commits, anywhere), sign with harness and model, e.g. `written with claude-opus-5 in opencode`.
 
 ## Product development
 
-Prefer learning through small, realistic implementations over extended speculative design.
-Prefer experiments over speculative architecture discussion.
+Learn through small, realistic implementations, not extended speculative design.
 
-When architecture is uncertain:
+When architecture is uncertain, build the smallest reversible vertical slice and exercise it in the real runtime.
 
-1. Build the smallest reversible vertical slice.
-2. Exercise it in the real runtime.
-3. Summarize what was learned.
-4. Decide the architecture before hardening.
-
-Do not block implementation on questions answerable through a cheap experiment. Do not let exploratory code become production architecture without consciously reviewing it.
-
-## External Reference Repositories
-
-You have read access to local reference repositories located at `.reference/*`. 
-When I ask for examples or patterns not found in this project, search there first.
-
-Currently available:
-- `jazz`, a local first synced database
-- `tilly`, a PWA built with jazz and the AI SDK optimized for mobile
-- `alkalye`, a offline capable PWA built with jazz
-- `blog`, my personal blog
-
-## Commands
-
-Use `work` to manage running project processes like dev servers and watchers.
-It can also set up a worktree after creation with the configured setup hook.
-
-## Quality
-
-This codebase will outlive you. Every shortcut you take becomes
-someone else's burden. Every hack compounds into technical debt
-that slows the whole team down.
-
-You are not just writing code. You are shaping the future of this
-project. The patterns you establish will be copied. The corners
-you cut will be cut again.
-
-Fight entropy. **Leave the codebase better than you found it.**
+Never block implementation on a question a cheap experiment can answer. Never let exploratory code become production architecture without a conscious review.
 
 ## Code
 
-When writing code, optimize the code for readability.
-Avoid comments. Instead take advantage of variable names and function encapsulation
-to create code that is nice to read.
-Then there is no reason to explain WHAT the code is doing anymore.
-If not obvious, you still can add comments that explain WHY code is there.
+Optimize for readability. Prefer descriptive names and small functions over comments; code should show WHAT it does. Add a comment only to explain WHY, when that isn't obvious.
 
-## Browser
+## Tooling
 
-Always use the browser via the `agent-browser` CLI. Do not use any other browser unless specifically asked to. Always use the `agent-browser` in the background, unless specifically asked to.
+- `work`: manages project processes (dev servers, watchers) and sets up worktrees via the configured setup hook.
+- `agent-browser`: the only browser to use, always in the background, unless told otherwise.
+
+## Reference repositories
+
+Read-only reference repos live at `.reference/*`. When asked for examples or patterns not in this project, search there first.
+
+- `jazz`: local-first synced database
+- `tilly`: mobile-optimized PWA built with jazz and the AI SDK
+- `alkalye`: offline-capable PWA built with jazz
+- `blog`: my personal blog

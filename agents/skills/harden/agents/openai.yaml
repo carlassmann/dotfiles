@@ -1,6 +1,6 @@
 interface:
   display_name: "Harden"
-  short_description: "Turn proven exploration into durable code"
-  default_prompt: "Use $harden to turn this proven exploration into a clean, durable implementation."
+  short_description: "Turn a proven prototype into durable code"
+  default_prompt: "Use $harden to turn this proven prototype into a clean, durable implementation."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

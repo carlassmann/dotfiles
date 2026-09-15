@@ -1,21 +1,21 @@
 ---
 name: harden
-description: Turn a proven exploration or prototype into a durable implementation. Use when observed behavior is understood and the code should become maintainable, tested, and production-ready.
+description: Turn a proven prototype or spike into a durable, production-ready implementation. Use when the user says clean this up, make it proper, productionize, production ready, make it real, or wants to keep prototype code and make it maintainable and tested.
 ---
 
 # Harden
 
-Use evidence from the exploration as the design input. Do not restart speculative architecture discussion unless a material unknown remains.
+Prototype evidence is the design input. Don't reopen architecture debate unless a material unknown remains.
 
-Identify the behavior and constraints that proved essential. Then:
+Identify what proved essential, then:
 
-- Remove abandoned paths, duplicated mechanisms, temporary diagnostics, and prototype-only affordances
-- Replace accidental structure with the simplest architecture justified by evidence
-- Prefer deep modules, clear ownership, readable names, and one source of truth
-- Preserve compatibility only when a real consumer requires it
-- Capture stable, non-obvious product or architectural intent in the project's existing documentation
+- Remove abandoned paths, duplicate mechanisms, temporary diagnostics, prototype-only affordances
+- Replace accidental structure with the simplest architecture the evidence justifies
+- Prefer deep modules, clear ownership, readable names, one source of truth
+- Keep compatibility only for real consumers
+- Record stable, non-obvious intent in the project's existing docs
 - Add or consolidate only high-signal tests for important behavior and invariants
 
-Exercise the hardened implementation in its real runtime. Run repository checks and affected end-to-end flows. Treat failures as evidence; diagnose causes instead of patching around symptoms.
+Exercise the result in the real runtime. Run repository checks and affected E2E flows. Failures are evidence: diagnose causes, don't patch symptoms.
 
-Do not commit, push, open a pull request, or broaden scope unless requested. Report the resulting architecture, removed prototype debt, verification, and remaining risks. Recommend `$deliver` when ready for review.
+No commit, push, PR, or scope expansion unless asked. Report resulting architecture, removed debt, verification, remaining risks. Recommend `$deliver` when ready for review.

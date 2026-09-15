@@ -1,6 +1,0 @@
-interface:
-  display_name: "Stop Exploring"
-  short_description: "Harvest prototype learnings before hardening"
-  default_prompt: "Use $stop-exploring to end this exploration and decide what should be hardened."
-policy:
-  allow_implicit_invocation: false

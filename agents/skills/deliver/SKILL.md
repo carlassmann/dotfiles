@@ -1,17 +1,17 @@
 ---
 name: deliver
-description: Deliver a completed code implementation through final runtime validation, quality review, checks, and pull-request handoff. Use when the user asks to finish, ship, or prepare work for human review.
+description: Finish an implementation and hand it to humans through final runtime validation, review, checks, and a pull request. Use when the user says ship it, wrap up, finish, open a PR, make a PR, or prepare for review.
 ---
 
 # Deliver
 
-Prepare the implementation for a human merge decision. Do not introduce new product scope unless required for correctness.
+Prepare the implementation for a human merge decision. No new product scope unless correctness requires it. If the code is still prototype-grade, `$harden` first.
 
-1. Resolve the intended target branch and inspect the full diff, working tree, linked issues, and existing pull request. Never guess a destructive or externally visible target.
-2. Exercise affected behavior in the real runtime. For UI changes, test relevant mobile and desktop states and capture current visual evidence.
-3. Run all repository-required checks and affected end-to-end flows. Diagnose and fix failures.
-4. Use the applicable `pr-review` quality gate. Validate findings, fix confirmed issues, and repeat fresh heterogeneous review passes until no confirmed actionable findings remain.
-5. Use `pr-writing` to create or update a concise pull request centered on why, meaningful decisions, scope, tradeoffs, and visual evidence. Remove stale claims and screenshots.
-6. Confirm the final branch, push, pull-request, CI, and mergeability state.
+1. Resolve the target branch. Inspect full diff, working tree, linked issues, existing PR. Never guess a destructive or externally visible target.
+2. Exercise affected behavior in the real runtime. For UI, test mobile and desktop and capture current screenshots.
+3. Run all repository-required checks and affected E2E flows. Diagnose and fix failures.
+4. Review the diff for defects (`code-review` or `counselors`). Confirm findings against code and runtime, fix valid ones, repeat until a fresh pass finds nothing.
+5. Create or update the PR: why, decisions, scope, tradeoffs, visual evidence. Apply `unslop`. Remove stale claims and screenshots.
+6. Confirm final branch, push, PR, CI, and mergeability state.
 
-Never merge unless explicitly requested. Never claim success without runtime and check evidence. Report delivered outcome, verification, pull-request state, and unresolved risks.
+Never merge unless asked. Never claim success without runtime and check evidence. Report outcome, verification, PR state, unresolved risks.

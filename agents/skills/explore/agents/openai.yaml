@@ -1,6 +1,0 @@
-interface:
-  display_name: "Explore"
-  short_description: "Learn through a reversible real implementation"
-  default_prompt: "Use $explore to investigate this idea through the smallest realistic implementation."
-policy:
-  allow_implicit_invocation: false
