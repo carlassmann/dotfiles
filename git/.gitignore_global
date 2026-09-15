@@ -39,3 +39,5 @@ out/
 *.bak
 *.tmp
 .cache/
+
+**/.claude/settings.local.json
