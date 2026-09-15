@@ -5,90 +5,13 @@ description: Go through pull requests that need a decision, one at a time. Summa
 
 # PR merge walkthrough
 
-Make it cheap for the user to decide on a PR. Never merge. Never push unless asked.
+Prepare one merge decision at a time. Never merge. Never push unless asked.
 
-## Pick the PR
+1. **Pick.** PRs awaiting the user (review-requested, assigned, mentioned), oldest first, drafts skipped. List the queue with URLs once, then take the first.
+2. **Understand.** Read diff, linked issue, review comments, CI. Say what a user can now do, see, or stop hitting. Note overlap with merged work or other queued PRs.
+3. **Check out.** Reuse the current worktree; check out the branch, merge base in locally, run checks via `work`. Name conflicting behaviors before resolving anything.
+4. **Try it.** Product-visible change: drive the app through the touched flow, desktop and mobile, screenshots. Internal change: run checks and say there is nothing to look at. Report breakage, don't quietly fix it.
+5. **Park.** Leave app and browser open on the exact screen and state where the change shows. Tell the user URL, account, clicks, and what to watch for.
+6. **Hand back.** PR URL first, then: product change, conflicts, what you tried and saw, what nobody verified, a call (merge, revise, skip, close).
 
-Default to PRs needing the user's attention: review-requested, assigned, or mentioned. Oldest first, drafts skipped. Use the user's own PRs instead when they say so, and keep that choice for later "next PR" requests.
-
-List the queue once, one line each, with the PR's URL on every line. Then take the first PR and stop there.
-
-## Read it
-
-Reading is parallel work. Fan out subagents, one prompt each, at the same time:
-
-- summarize the diff in product terms and name the screens or endpoints it touches
-- check whether merged work already covers it, and whether it collides with another open PR in the queue
-- review the diff for defects worth mentioning in the decision, using `code-review`
-- dig out the linked issue, acceptance criteria, prior review comments, and CI failures
-
-Give each the PR number and branch, and ask for a short answer, not a report. Treat what comes back as a claim to check against the diff yourself. Skip the fan-out when the diff is small or obvious.
-
-Out of that, say what the PR does in product terms, not file terms: what can a user now do, see, or stop hitting. If merged work already covers it, show the overlap and suggest closing.
-
-Then decide which kind it is:
-
-- Product-visible. UI, copy, flows, API responses. Try it and set up the browser.
-- Internal only. Refactors, infra, types, tests. Reason about it, run the checks, and say there is nothing to look at.
-
-Everything after this stays with you. The worktree, the running app, and the browser are one sequential thing, and a subagent cannot hand the user a browser tab.
-
-## Run it
-
-Work in the current worktree and reuse it for every PR in the walkthrough. Do not create one per PR.
-
-Check out the PR branch here, and use `work` for the dev server, services, URLs, and logs. Leave those running between PRs and restart only when the branch needs it. Before switching branches, drop the last PR's local merge and leave the tree clean.
-
-Merge current base in locally. Three things can turn up:
-
-- conflicts git reports
-- conflicts git does not report, where both changes survive and the result is duplicated or contradictory
-- unrelated base changes that need no decision
-
-Before resolving anything meaningful, say which behaviors collide. Keep current product behavior unless the PR means to replace it.
-
-## Try it yourself
-
-Confirm it works by watching it work. A green test suite is not that.
-
-- Drive the app to the state the PR touches and do the thing a user would do.
-- Do the same on base when the question is whether anything actually changed.
-- For UI, check desktop and mobile, and take fresh screenshots.
-- Follow the browser skill when driving a browser.
-- Use `test-guidance` for test decisions, at the cheapest tier that helps.
-- Use throwaway accounts and seed data when needed, and say what you created.
-
-When something breaks, work out whether the PR, the base, or the local setup caused it. Report it instead of quietly fixing it.
-
-Keep three things apart in the report: what you tried, what the checks covered, what nobody verified.
-
-## Set up the browser
-
-For product-visible changes, leave everything running and parked on the change.
-
-- Keep the app and the browser up until the user moves on.
-- Open the exact screen where the change shows, with the seed data or test account already in place.
-- If it only shows up in a specific state, a flag, a role, an empty list, an error, set that state up instead of describing it.
-- Then tell the user how to look: the URL, the account, the clicks from where they are, what to watch for, and what it looked like before.
-
-Leave the screenshots, accounts, and services alone while the user still needs them. Clean up when leaving the PR.
-
-## Hand it back
-
-Keep it short, and lead with the PR's URL so the user can open it:
-
-- what the PR changes about the product
-- conflicts and how you would resolve them
-- what you tried and what you saw
-- how to look at it, with the local URL
-- what is left, risky, or unclear
-- links for anything you cite: the linked issue, a superseding PR, a failing check
-- a call: merge, revise, skip, or close
-
-Then stop. Offer to fix in-scope defects and conflicts, but only write code, push, or edit the PR description when asked. If asked:
-
-1. Use `pr-writing` and `unslop` to match the description to the diff.
-2. Push, then run the repo's signoff checks on that pushed commit.
-3. Confirm GitHub calls the PR mergeable and the checks belong to the final commit.
-
-A stale check or a local run is not CI signoff. Wait for the user to decide or ask for the next PR.
+Then stop. Fix defects, push, or edit the description only when asked.

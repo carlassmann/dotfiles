@@ -1,0 +1,6 @@
+interface:
+  display_name: "Prototype"
+  short_description: "Spike an idea through the smallest real implementation"
+  default_prompt: "Use $prototype to test this idea through the smallest realistic implementation and report what it taught."
+policy:
+  allow_implicit_invocation: true
