@@ -25,7 +25,7 @@ Optimize for readability. Prefer descriptive names and small functions over comm
 
 ## Reference repositories
 
-Read-only reference repos live at `.reference/*`. When asked for examples or patterns not in this project, search there first.
+Read-only reference repos live in `.reference/` or `.references/`. When asked for examples or patterns not in this project, search there first.
 
 - `jazz`: local-first synced database
 - `tilly`: mobile-optimized PWA built with jazz and the AI SDK
