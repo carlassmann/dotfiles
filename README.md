@@ -66,6 +66,26 @@ Log out once so keyboard defaults take effect.
 - Helix is used as a file browser, not an IDE. `L d` / `L l` toggle dark / light theme.
 - Hyperkey maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for AeroSpace.
 
+### Remote opencode
+
+`node scripts/bin/opencode-tunnel.ts ensure` starts OpenCode's localhost background service,
+creates a Cloudflare tunnel, protects it with an email allow-list in Access, and installs a
+restart-on-crash macOS LaunchAgent. `status` checks the layers; `uninstall` removes only the
+LaunchAgent. Node ≥ 24 runs the TypeScript directly.
+
+Keep private values in `~/.config/secrets/env`, never this repository:
+
+```sh
+export OPENCODE_TUNNEL_HOSTNAME="..."
+export OPENCODE_TUNNEL_ALLOWED_EMAILS="...,..."
+export OPENCODE_SERVER_PASSWORD="..." # needed initially; optional after pinning
+export CLOUDFLARE_API_TOKEN="..." # optional after Access exists
+```
+
+Run `cloudflared tunnel login` once first. `ensure` configures Access before DNS or tunnel
+startup and stops the tunnel if Access verification fails. Generated credentials, tunnel
+configuration, hostname, allow-list, token, and password remain outside the repository.
+
 ### AeroSpace
 
 - Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
