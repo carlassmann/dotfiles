@@ -1,4 +1,4 @@
-theme = light:Github Light Default,dark:Github Dark Default
+theme = Github Dark Default
 
 font-family = GeistMono Nerd Font
 font-size = 15

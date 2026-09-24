@@ -4,8 +4,13 @@
     "pr": ""
   },
   "permissions": {
+    "allow": [
+      "Bash(codex:*)",
+      "Bash(opencode:*)"
+    ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -78,6 +83,5 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "model": "claude-fable-5-1[1m]"
+  "voiceEnabled": true
 }

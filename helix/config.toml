@@ -1,6 +1,7 @@
 theme = "github_dark"
 
 [editor]
+clipboard-provider = "termcode"
 color-modes = true
 cursorline = true
 end-of-line-diagnostics = "hint"

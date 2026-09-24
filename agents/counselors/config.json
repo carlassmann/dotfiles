@@ -8,7 +8,7 @@
     "maxParallel": 8
   },
   "tools": {
-    "claude-opus-5": {
+    "claude-opus-5.5": {
       "binary": "claude",
       "adapter": "claude",
       "readOnly": {
@@ -16,10 +16,10 @@
       },
       "extraFlags": [
         "--model",
-        "claude-opus-5"
+        "claude-opus-5-5"
       ]
     },
-    "codex-gpt-5.6-sol": {
+    "codex-gpt-6-sol": {
       "binary": "codex",
       "adapter": "codex",
       "readOnly": {
@@ -27,7 +27,7 @@
       },
       "extraFlags": [
         "-m",
-        "gpt-5.6-sol"
+        "gpt-6-sol"
       ]
     },
     "opencode-go-hy3": {
@@ -84,8 +84,8 @@
   },
   "groups": {
     "council": [
-      "claude-opus-5",
-      "codex-gpt-5.6-sol",
+      "claude-opus-5.5",
+      "codex-gpt-6-sol",
       "opencode-go-hy3",
       "opencode-go-deepseek-v4-flash",
       "opencode-go-glm-5.3-flash"
