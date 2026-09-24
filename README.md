@@ -56,8 +56,6 @@ Log out once so keyboard defaults take effect.
 | `agents/claude/settings.json` | `~/.claude/settings.json` |
 | `agents/opencode/*` | `~/.config/opencode/*` |
 | `agents/counselors/config.json` | `~/.config/counselors/config.json` |
-| `agents/pi/keybindings.json` | `~/.pi/agent/keybindings.json` |
-| `agents/pi/extensions/` | `~/.pi/agent/extensions` |
 | `scripts/bin/` | on PATH (`pr-review`) |
 
 ## Workflow

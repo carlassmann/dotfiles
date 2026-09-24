@@ -92,10 +92,6 @@ link agents/opencode/skills "$HOME/.config/opencode/skills"
 
 link agents/counselors/config.json "$HOME/.config/counselors/config.json"
 
-# Pi stores runtime data beside config — link tracked files individually
-link agents/pi/keybindings.json "$HOME/.pi/agent/keybindings.json"
-link agents/pi/extensions "$HOME/.pi/agent/extensions"
-
 ensure_secrets_file
 
 if [ "${1:-}" = "--full" ]; then
