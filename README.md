@@ -11,7 +11,7 @@ cd ~/Developer/dotfiles
 ./install.sh --full
 ```
 
-`--full` runs `brew bundle` against `Brewfile`, installs node and bun via mise, bun globals and herdr, and applies `macos/defaults.sh` (keyboard, dock, finder, Hyperkey prefs). Without it, `install.sh` only creates symlinks.
+`--full` runs `brew bundle` against `Brewfile`, installs node and bun via mise, bun globals and herdr, and applies `macos/defaults.sh` (keyboard, dock, finder). Without it, `install.sh` only creates symlinks.
 
 ### Omarchy (Arch)
 
@@ -40,8 +40,8 @@ Grant in System Settings → Privacy & Security:
 
 | app | permission |
 | --- | --- |
-| Hyperkey | Accessibility, Input Monitoring |
-| AeroSpace | Accessibility |
+| Karabiner-Elements | Input Monitoring, driver extension (Login Items & Extensions) |
+| Rift | Accessibility (then `rift service restart`) |
 | Wispr Flow | Accessibility, Microphone |
 | 1Password | Accessibility (autofill), browser extension |
 | Ghostty | Full Disk Access (optional) |
@@ -56,7 +56,8 @@ Log out once so keyboard defaults take effect.
 | `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases) |
 | `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
 | `git/.gitignore_global` | `~/.gitignore_global` |
-| `aerospace/aerospace.toml` | `~/.aerospace.toml` |
+| `rift/config.toml` | `~/.config/rift/config.toml` (macOS only) |
+| `karabiner/` | `~/.config/karabiner` (macOS only) |
 | `ghostty/config` | `~/.config/ghostty/config` (macOS only) |
 | `ghostty/shared.conf` | `~/.config/ghostty/shared.conf`, included by either config |
 | `herdr/config.toml` | `~/.config/herdr/config.toml` (macOS only) |
@@ -67,26 +68,42 @@ Log out once so keyboard defaults take effect.
 | `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |
 | `agents/claude/settings.json` | `~/.claude/settings.json` |
 | `agents/opencode/*` | `~/.config/opencode/*` |
-| `agents/pi/keybindings.json` | `~/.pi/agent/keybindings.json` |
-| `agents/pi/extensions/` | `~/.pi/agent/extensions` |
-| `scripts/bin/` | on PATH (`pr-review`) |
+| `scripts/bin/*` | `~/.local/bin/*` (on PATH: `pr-review`) |
 
 ## Workflow
 
 - Ghostty is the terminal, herdr manages agent sessions.
 - Helix is used as a file browser, not an IDE. `L d` / `L l` toggle dark / light theme.
-- Hyperkey maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for AeroSpace.
+- Karabiner maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for Rift, tap alone for Escape. Not Hyperkey: Rift reads keys before Hyperkey adds the modifiers.
+- Agents write throwaway output to `.scratch/` in the repo they are working in. It is in
+  `~/.gitignore_global`, so it stays inside the workspace without showing up as repo changes.
+  `pr-review` uses it.
 
-### AeroSpace
+### Tailnet access
+
+Tailscale can serve OpenCode's localhost service to your devices:
+
+```sh
+tailscale serve --bg --https=8788 http://127.0.0.1:8788
+# https://<machine>.<tailnet>.ts.net:8788, tailnet-only
+```
+
+Only tailnet members can reach it; the pinned OpenCode password still applies.
+Serve config persists across reboots. Port 443 (the no-port URL) is taken by a root
+`portless proxy` on this machine, hence the explicit port. Remove with
+`tailscale serve --https=8788 off`.
+
+### Rift
 
 - Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
 - Move a window: `Hyper-m`, release, then `h/j/k/l`, a workspace number, `o` (next monitor) or `Tab` (whole workspace to next monitor)
 - Resize: `Hyper-r`, then `h/j/k/l`, `Esc`/`Enter` to leave
+- Split orientation: `Hyper-v`, stack (tab strip): `Hyper-t`, balance: `Hyper-e`, last workspace: `Hyper-Tab`
+- Service: `Hyper-s`, then `h/j/k/l` join, `f` float, `r` unjoin, `` ` `` reload
 - Cancel any mode: `Esc`
 
 ### Not in Homebrew
 
 - herdr: installed by `install.sh --full` via `curl -fsSL https://herdr.dev/install.sh | sh`
 - Node and bun via `mise`
-- `work`: cloned to `~/Developer/work-cli`, built and `bun link`ed (not on npm)
-- `opencode`, `agent-browser` via bun globals
+- `work` (from GitHub), `opencode`, `agent-browser` via bun globals

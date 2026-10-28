@@ -3,6 +3,7 @@
 theme = "omarchy"
 
 [editor]
+clipboard-provider = "termcode"
 color-modes = true
 cursorline = true
 end-of-line-diagnostics = "hint"

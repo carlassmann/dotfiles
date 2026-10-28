@@ -2,13 +2,13 @@
 # includes shared.conf
 config-file = shared.conf
 
-theme = light:Github Light Default,dark:Github Dark Default
+theme = Github Dark Default
 
 font-family = GeistMono Nerd Font
 font-size = 15
 
 maximize = true
 
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
 
 macos-option-as-alt = left

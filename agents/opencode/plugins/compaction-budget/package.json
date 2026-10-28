@@ -1,0 +1,6 @@
+{
+  "name": "dotfiles-compaction-budget",
+  "private": true,
+  "type": "module",
+  "main": "index.js"
+}

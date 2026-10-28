@@ -3,8 +3,37 @@
     "commit": "",
     "pr": ""
   },
+  "disableBundledSkills": true,
+  "disableWorkflows": true,
+  "disableRemoteControl": true,
+  "disableClaudeAiConnectors": true,
+  "disableArtifact": true,
   "permissions": {
+    "deny": [
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "SendMessage",
+      "PushNotification",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "AskUserQuestion",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ],
+    "allow": [
+      "Bash(codex:*)",
+      "Bash(opencode:*)"
+    ],
     "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "autoCompactWindow": 1000000,
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "25"
   },
   "hooks": {
     "SessionStart": [
@@ -79,5 +108,5 @@
   "theme": "custom:omarchy",
   "agentPushNotifEnabled": true,
   "voiceEnabled": true,
-  "model": "claude-fable-5-1[1m]"
+  "autoMemoryEnabled": false
 }

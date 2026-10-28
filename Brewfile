@@ -25,8 +25,8 @@ cask "codex"
 
 # desktop
 cask "ghostty"
-cask "nikitabobko/tap/aerospace"
-cask "hyperkey"
+brew "acsandmann/tap/rift"
+cask "karabiner-elements"
 cask "raycast"
 cask "helium-browser"
 cask "google-chrome"

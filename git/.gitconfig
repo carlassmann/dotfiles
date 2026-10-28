@@ -1,12 +1,8 @@
 [init]
 	defaultBranch = main
 
-[user]
-	email = assmann@hey.com
-	name = Carl Assmann
-
 [core]
-	editor = hx +
+	editor = hx
 	excludesfile = ~/.gitignore_global
 
 [pull]

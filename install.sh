@@ -6,15 +6,59 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS="$(uname -s)"
 OMARCHY_THEME="$HOME/.local/state/omarchy/current/theme"
 
+# source:target pairs. Keep in sync with the layout table in README.md.
+links=(
+  "zsh/.zshrc:$HOME/.zshrc"
+  "zsh/.zshenv:$HOME/.zshenv"
+
+  "git/.gitconfig:$HOME/.gitconfig"
+  "git/.gitignore_global:$HOME/.gitignore_global"
+
+  "helix:$HOME/.config/helix"
+  "ghostty/shared.conf:$HOME/.config/ghostty/shared.conf"
+
+  # Claude reads ~/.claude — link tracked config individually so runtime data
+  # (projects, history, tasks) stays out of the repo. Skills: see link_skills.
+  "agents/claude/settings.json:$HOME/.claude/settings.json"
+  "agents/AGENTS.md:$HOME/.claude/CLAUDE.md"
+
+  # Codex picks up AGENTS.md and skills/ from ~/.codex
+  "agents/AGENTS.md:$HOME/.codex/AGENTS.md"
+
+  # Opencode reads ~/.config/opencode — link tracked files individually so opencode
+  # can still write generated files (bun.lock, node_modules) into the same dir
+  "agents/opencode/AGENTS.md:$HOME/.config/opencode/AGENTS.md"
+  "agents/opencode/opencode.json:$HOME/.config/opencode/opencode.json"
+  "agents/opencode/plugins/compaction-budget:$HOME/.config/opencode/plugins/compaction-budget"
+  "agents/opencode/package.json:$HOME/.config/opencode/package.json"
+  "agents/opencode/skills:$HOME/.config/opencode/skills"
+)
+
+macos_links=(
+  "rift/config.toml:$HOME/.config/rift/config.toml"
+  "karabiner:$HOME/.config/karabiner"
+  "ghostty/config:$HOME/.config/ghostty/config"
+  "herdr/config.toml:$HOME/.config/herdr/config.toml"
+  "lazygit/config.yml:$HOME/Library/Application Support/lazygit/config.yml"
+)
+
+# Omarchy owns its ghostty and herdr configs (see include_ghostty_shared)
+linux_links=(
+  "lazygit/config.yml:$HOME/.config/lazygit/config.yml"
+)
+
 link() {
   local source="$DOTFILES_DIR/$1"
   local target="$2"
 
   if [ -L "$target" ]; then
-    if [ "$(readlink "$target")" = "$source" ]; then
+    local current
+    current="$(readlink "$target")"
+    if [ "$current" = "$source" ]; then
       echo "✓ $target"
       return 0
     fi
+    echo "~ $target (relinked, was $current)"
     rm "$target"
   elif [ -e "$target" ]; then
     echo "- skipped $target (exists, not a symlink)"
@@ -24,6 +68,21 @@ link() {
   mkdir -p "$(dirname "$target")"
   ln -s "$source" "$target"
   echo "✓ $target"
+}
+
+link_all() {
+  local entry
+  for entry in "$@"; do
+    link "${entry%%:*}" "${entry#*:}"
+  done
+}
+
+link_scripts() {
+  local script
+  for script in "$DOTFILES_DIR"/scripts/bin/*; do
+    [ -e "$script" ] || continue
+    link "scripts/bin/$(basename "$script")" "$HOME/.local/bin/$(basename "$script")"
+  done
 }
 
 # Link each skill on its own so tool-installed skills (Omarchy's, synced ones)
@@ -136,6 +195,7 @@ install_bun_globals() {
   command -v bun >/dev/null 2>&1 || return 0
   bun add -g \
     @opencode/cli \
+    git+https://github.com/ccssmnn/work-cli.git \
     agent-browser \
     prettier \
     prettier-plugin-tailwindcss \
@@ -145,12 +205,10 @@ install_bun_globals() {
     @tailwindcss/language-server
 }
 
-# Not on npm yet
-install_work_cli() {
-  command -v work >/dev/null 2>&1 && return 0
-  local dir="$HOME/Developer/work-cli"
-  [ -d "$dir" ] || git clone https://github.com/ccssmnn/work-cli.git "$dir"
-  (cd "$dir" && bun install && bun run build && bun link)
+install_rift_service() {
+  command -v rift >/dev/null 2>&1 || return 0
+  rift service install
+  rift service start
 }
 
 install_herdr() {
@@ -166,48 +224,19 @@ ensure_secrets_file() {
 
 echo "🚀 linking dotfiles from $DOTFILES_DIR"
 
-link zsh/.zshrc "$HOME/.zshrc"
-link zsh/.zshenv "$HOME/.zshenv"
-
-link git/.gitconfig "$HOME/.gitconfig"
-link git/.gitignore_global "$HOME/.gitignore_global"
-
-link helix "$HOME/.config/helix"
-link_helix_theme
-link ghostty/shared.conf "$HOME/.config/ghostty/shared.conf"
-
+link_all "${links[@]}"
 if [ "$OS" = Darwin ]; then
-  link aerospace/aerospace.toml "$HOME/.aerospace.toml"
-  link ghostty/config "$HOME/.config/ghostty/config"
-  link herdr/config.toml "$HOME/.config/herdr/config.toml"
-  link lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
+  link_all "${macos_links[@]}"
 else
-  # Omarchy ships its own herdr config, themed from the terminal palette
+  link_all "${linux_links[@]}"
   include_ghostty_shared
-  link lazygit/config.yml "$HOME/.config/lazygit/config.yml"
 fi
 
-# Claude reads ~/.claude — link tracked config individually so runtime data
-# (projects, history, tasks) stays out of the repo
-link agents/claude/settings.json "$HOME/.claude/settings.json"
-link agents/AGENTS.md "$HOME/.claude/CLAUDE.md"
+link_helix_theme
 link_skills "$HOME/.claude/skills"
-ensure_claude_theme
-
-# Codex picks up AGENTS.md and skills/ from ~/.codex
-link agents/AGENTS.md "$HOME/.codex/AGENTS.md"
 link_skills "$HOME/.codex/skills"
-
-# Opencode reads ~/.config/opencode — link tracked files individually so opencode
-# can still write generated files (bun.lock, node_modules) into the same dir
-link agents/opencode/AGENTS.md "$HOME/.config/opencode/AGENTS.md"
-link agents/opencode/opencode.json "$HOME/.config/opencode/opencode.json"
-link agents/opencode/package.json "$HOME/.config/opencode/package.json"
-link agents/opencode/skills "$HOME/.config/opencode/skills"
-
-# Pi stores runtime data beside config — link tracked files individually
-link agents/pi/keybindings.json "$HOME/.pi/agent/keybindings.json"
-link agents/pi/extensions "$HOME/.pi/agent/extensions"
+ensure_claude_theme
+link_scripts
 
 ensure_secrets_file
 
@@ -219,9 +248,9 @@ if [ "${1:-}" = "--full" ]; then
   fi
   install_mise_tools
   install_bun_globals
-  install_work_cli
   install_herdr
   if [ "$OS" = Darwin ]; then
+    install_rift_service
     bash "$DOTFILES_DIR/macos/defaults.sh"
   fi
 fi
@@ -230,6 +259,6 @@ echo ""
 echo "✅ done"
 echo ""
 echo "next:"
-echo "  ./install.sh --full   packages (brew / pacman), bun globals, herdr, OS defaults (new machine)"
-echo "  put secrets in ~/.config/secrets/env"
+echo "  ./install.sh --full   packages (brew / pacman), node + bun, bun globals, herdr, OS defaults (new machine)"
+echo "  secrets: ~/.config/secrets/env (exported), or one file per setting below it"
 echo "  exec zsh"
