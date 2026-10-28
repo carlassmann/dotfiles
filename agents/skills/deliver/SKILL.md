@@ -10,7 +10,7 @@ Prepare the implementation for a human merge decision. No new product scope unle
 1. Resolve the target branch. Inspect full diff, working tree, linked issues, existing PR. Never guess a destructive or externally visible target.
 2. Exercise affected behavior in the real runtime. For UI, test mobile and desktop and capture current screenshots.
 3. Run all repository-required checks and affected E2E flows. Diagnose and fix failures.
-4. Review the diff for defects (`code-review` or `counselors`). Confirm findings against code and runtime, fix valid ones, repeat until a fresh pass finds nothing.
+4. Review the diff for defects (`code-review`). Confirm findings against code and runtime, fix valid ones, repeat until a fresh pass finds nothing.
 5. Create or update the PR: why, decisions, scope, tradeoffs, visual evidence. Apply `unslop`. Remove stale claims and screenshots.
 6. Confirm final branch, push, PR, CI, and mergeability state.
 

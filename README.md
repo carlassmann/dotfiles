@@ -67,7 +67,6 @@ Log out once so keyboard defaults take effect.
 | `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |
 | `agents/claude/settings.json` | `~/.claude/settings.json` |
 | `agents/opencode/*` | `~/.config/opencode/*` |
-| `agents/counselors/config.json` | `~/.config/counselors/config.json` |
 | `agents/pi/keybindings.json` | `~/.pi/agent/keybindings.json` |
 | `agents/pi/extensions/` | `~/.pi/agent/extensions` |
 | `scripts/bin/` | on PATH (`pr-review`) |
@@ -90,4 +89,4 @@ Log out once so keyboard defaults take effect.
 - herdr: installed by `install.sh --full` via `curl -fsSL https://herdr.dev/install.sh | sh`
 - Node and bun via `mise`
 - `work`: cloned to `~/Developer/work-cli`, built and `bun link`ed (not on npm)
-- `opencode`, `counselors`, `agent-browser` via bun globals
+- `opencode`, `agent-browser` via bun globals

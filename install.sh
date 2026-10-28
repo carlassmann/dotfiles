@@ -136,7 +136,6 @@ install_bun_globals() {
   command -v bun >/dev/null 2>&1 || return 0
   bun add -g \
     @opencode/cli \
-    counselors \
     agent-browser \
     prettier \
     prettier-plugin-tailwindcss \
@@ -204,10 +203,7 @@ link_skills "$HOME/.codex/skills"
 link agents/opencode/AGENTS.md "$HOME/.config/opencode/AGENTS.md"
 link agents/opencode/opencode.json "$HOME/.config/opencode/opencode.json"
 link agents/opencode/package.json "$HOME/.config/opencode/package.json"
-link agents/opencode/agent "$HOME/.config/opencode/agent"
 link agents/opencode/skills "$HOME/.config/opencode/skills"
-
-link agents/counselors/config.json "$HOME/.config/counselors/config.json"
 
 # Pi stores runtime data beside config — link tracked files individually
 link agents/pi/keybindings.json "$HOME/.pi/agent/keybindings.json"
