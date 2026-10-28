@@ -154,6 +154,7 @@ install_arch_packages() {
     git-delta git-lfs
     helix marksman
     uv
+    lsof
     otf-geist-mono-nerd
   )
   local missing=()

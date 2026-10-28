@@ -21,7 +21,7 @@ cd ~/Developer/dotfiles
 ./install.sh --full
 ```
 
-`--full` installs zsh, delta, git-lfs, helix, marksman, uv and Geist Mono via `omarchy pkg add`, links `hx` to `helix`, makes zsh the login shell, then node and bun via mise and bun globals. Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
+`--full` installs zsh, delta, git-lfs, helix, marksman, uv, lsof (portless) and Geist Mono via `omarchy pkg add`, links `hx` to `helix`, makes zsh the login shell, then node and bun via mise and bun globals. Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
 
 Themes follow `omarchy theme set`: Ghostty, Helix (`omarchy` theme), Claude Code (`custom:omarchy`), opencode (`system`) and herdr (`terminal`) all retint. Omarchy owns `~/.config/ghostty/config` and `~/.config/herdr/config.toml`; install.sh only appends an include of `ghostty/shared.conf`. Font: `omarchy font set "GeistMono Nerd Font"`.
 
