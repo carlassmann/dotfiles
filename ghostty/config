@@ -10,7 +10,7 @@ maximize = true
 window-padding-balance = true
 window-padding-color = extend
 
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
 mouse-hide-while-typing = true 
 
 macos-option-as-alt = left

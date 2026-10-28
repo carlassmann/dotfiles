@@ -1,0 +1,135 @@
+# Rift config. Reference: rift.default.toml in https://github.com/acsandmann/rift
+# Hyper = Caps Lock via Hyperkey. Workspace indices are zero-based: Hyper-1 is workspace 0.
+
+[settings]
+# no waiting on animations
+animate = false
+# rift leaves spaces unmanaged by default; manage everything
+default_disable = false
+focus_follows_mouse = false
+mouse_follows_focus = false
+mouse_hides_on_focus = false
+auto_focus_blacklist = ["com.raycast.macos", "com.apple.Spotlight"]
+run_on_start = []
+hot_reload = true
+
+[settings.layout]
+mode = "traditional"
+window_insertion_point = "next_to_selection"
+
+[settings.layout.traditional]
+equalize_nodes = true
+
+[settings.layout.stack]
+stack_offset = 30.0
+default_orientation = "perpendicular"
+
+[settings.layout.gaps.outer]
+top = 5
+left = 5
+bottom = 5
+right = 5
+
+[settings.layout.gaps.inner]
+horizontal = 5
+vertical = 5
+
+[settings.ui.menu_bar]
+enabled = true
+show_empty = false
+show_binding_mode = true
+mode = "all"
+active_label = "index"
+display_style = "label"
+
+[settings.ui.stack_line]
+enabled = true
+
+[virtual_workspaces]
+mode = "per_display"
+enabled = true
+default_workspace_count = 9
+auto_assign_windows = true
+preserve_focus_per_workspace = true
+workspace_auto_back_and_forth = false
+prevent_wrapping = false
+workspace_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+workspace_rules = []
+app_rules = []
+
+[modifier_combinations]
+hyper = "Ctrl + Alt + Shift + Meta"
+
+[keys]
+# real Hyper-Slash never reaches rift (synthetic does); letters work
+"hyper + V" = "toggle_orientation"
+# Hyper-Comma and Hyper-Period trigger macOS sysdiagnose before rift sees them
+"hyper + T" = "toggle_stack"
+
+"hyper + H" = { move_focus = "left" }
+"hyper + J" = { move_focus = "down" }
+"hyper + K" = { move_focus = "up" }
+"hyper + L" = { move_focus = "right" }
+
+"hyper + F" = "toggle_fullscreen"
+"hyper + O" = { focus_display = "right" }
+"hyper + E" = "balance"
+"hyper + Tab" = "switch_to_last_workspace"
+
+"hyper + M" = { binding_mode = "move" }
+"hyper + R" = { binding_mode = "resize" }
+"hyper + S" = { binding_mode = "service" }
+
+"hyper + 1" = { switch_to_workspace = 0 }
+"hyper + 2" = { switch_to_workspace = 1 }
+"hyper + 3" = { switch_to_workspace = 2 }
+"hyper + 4" = { switch_to_workspace = 3 }
+"hyper + 5" = { switch_to_workspace = 4 }
+"hyper + 6" = { switch_to_workspace = 5 }
+"hyper + 7" = { switch_to_workspace = 6 }
+"hyper + 8" = { switch_to_workspace = 7 }
+"hyper + 9" = { switch_to_workspace = 8 }
+
+# Binding modes must stay below all [keys] entries (TOML table scoping)
+[binding_modes.move]
+"Escape" = { binding_mode = "default" }
+
+"H" = [{ move_node = "left" }, { binding_mode = "default" }]
+"J" = [{ move_node = "down" }, { binding_mode = "default" }]
+"K" = [{ move_node = "up" }, { binding_mode = "default" }]
+"L" = [{ move_node = "right" }, { binding_mode = "default" }]
+"O" = [{ move_window_to_display = { selector = "right" } }, { binding_mode = "default" }]
+"Tab" = [{ move_workspace_to_display = { selector = "right", wrap_around = true } }, { binding_mode = "default" }]
+
+"1" = [{ move_window_to_workspace = 0 }, { binding_mode = "default" }]
+"2" = [{ move_window_to_workspace = 1 }, { binding_mode = "default" }]
+"3" = [{ move_window_to_workspace = 2 }, { binding_mode = "default" }]
+"4" = [{ move_window_to_workspace = 3 }, { binding_mode = "default" }]
+"5" = [{ move_window_to_workspace = 4 }, { binding_mode = "default" }]
+"6" = [{ move_window_to_workspace = 5 }, { binding_mode = "default" }]
+"7" = [{ move_window_to_workspace = 6 }, { binding_mode = "default" }]
+"8" = [{ move_window_to_workspace = 7 }, { binding_mode = "default" }]
+"9" = [{ move_window_to_workspace = 8 }, { binding_mode = "default" }]
+
+[binding_modes.resize]
+"Escape" = { binding_mode = "default" }
+"Enter" = { binding_mode = "default" }
+
+"H" = { resize_window_shrink = "horizontal" }
+"J" = { resize_window_grow = "vertical" }
+"K" = { resize_window_shrink = "vertical" }
+"L" = { resize_window_grow = "horizontal" }
+"Minus" = { resize_window_shrink = "smart" }
+"Equal" = { resize_window_grow = "smart" }
+"B" = "balance"
+
+[binding_modes.service]
+"Escape" = { binding_mode = "default" }
+"Backquote" = ["reload_config", { binding_mode = "default" }]
+"R" = ["unjoin_windows", { binding_mode = "default" }]
+"F" = ["toggle_window_floating", { binding_mode = "default" }]
+
+"H" = [{ join_window = "left" }, { binding_mode = "default" }]
+"J" = [{ join_window = "down" }, { binding_mode = "default" }]
+"K" = [{ join_window = "up" }, { binding_mode = "default" }]
+"L" = [{ join_window = "right" }, { binding_mode = "default" }]

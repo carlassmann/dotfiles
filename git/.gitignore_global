@@ -35,6 +35,9 @@ build/
 out/
 *.log
 
+# Agent scratch (see scripts/bin/pr-review, agents/skills/counselors)
+.scratch/
+
 # Misc
 *.bak
 *.tmp

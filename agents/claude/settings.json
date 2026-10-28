@@ -3,7 +3,27 @@
     "commit": "",
     "pr": ""
   },
+  "disableBundledSkills": true,
+  "disableWorkflows": true,
+  "disableRemoteControl": true,
+  "disableClaudeAiConnectors": true,
+  "disableArtifact": true,
   "permissions": {
+    "deny": [
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "SendMessage",
+      "PushNotification",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "AskUserQuestion",
+      "CronCreate",
+      "CronDelete",
+      "CronList"
+    ],
     "allow": [
       "Bash(codex:*)",
       "Bash(opencode:*)"
@@ -11,6 +31,10 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "autoCompactWindow": 1000000,
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "25"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -19,6 +43,16 @@
           {
             "type": "command",
             "command": "[ -f \"$HOME/.claude/hooks/herdr-agent-state.sh\" ] && bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session || true",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/carlassmann/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10
           }
         ]
@@ -83,5 +117,6 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "autoMemoryEnabled": false
 }

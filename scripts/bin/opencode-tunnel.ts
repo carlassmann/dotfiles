@@ -27,6 +27,7 @@ type AccessApplication = {
 type Tunnel = { id: string; name: string };
 
 const runtimeDirectory = path.join(homedir(), ".config", "opencode-tunnel");
+const secretsDirectory = path.join(homedir(), ".config", "secrets");
 const tunnelConfigPath = path.join(runtimeDirectory, "cloudflared.yml");
 const tunnelLogPath = path.join(runtimeDirectory, "cloudflared.log");
 const launchAgentId = "dev.opencode.remote";
@@ -38,7 +39,11 @@ const launchAgentPath = path.join(
 );
 const usage = `usage: opencode-tunnel [ensure|status|uninstall]
 
-required environment:
+Each setting is read from the environment, or from a file of the same name in
+~/.config/secrets when the variable is not exported. Files keep the value out of
+the env that every shell and subprocess inherits.
+
+required:
   OPENCODE_TUNNEL_HOSTNAME        public hostname
   OPENCODE_TUNNEL_ALLOWED_EMAILS  comma-separated Access allow-list
 
@@ -64,14 +69,11 @@ async function ensure(config: Config) {
   const tunnel = ensureTunnel(config.tunnelName);
 
   // Keep the origin offline while Access and DNS change. Failed setup stays private.
-  if (
-    !process.env.CLOUDFLARE_API_TOKEN &&
-    !(await accessProtects(config.hostname))
-  )
+  const apiToken = readSecret("CLOUDFLARE_API_TOKEN");
+  if (!apiToken && !(await accessProtects(config.hostname)))
     fail("CLOUDFLARE_API_TOKEN is required until Cloudflare Access exists");
   stopAgent();
-  if (process.env.CLOUDFLARE_API_TOKEN)
-    await ensureAccessApplication(config, tunnel);
+  if (apiToken) await ensureAccessApplication(config, tunnel);
   else say("Access: reusing verified existing application");
   writeTunnelConfig(config, tunnel);
   cloudflared([
@@ -105,11 +107,11 @@ async function status(config: Config) {
 }
 
 function readConfig(): Config {
-  const hostname = requireEnvironment("OPENCODE_TUNNEL_HOSTNAME")
+  const hostname = requireSecret("OPENCODE_TUNNEL_HOSTNAME")
     .trim()
     .toLowerCase();
   if (!isHostname(hostname)) fail("OPENCODE_TUNNEL_HOSTNAME is invalid");
-  const allowedEmails = requireEnvironment("OPENCODE_TUNNEL_ALLOWED_EMAILS")
+  const allowedEmails = requireSecret("OPENCODE_TUNNEL_ALLOWED_EMAILS")
     .split(",")
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
@@ -121,22 +123,22 @@ function readConfig(): Config {
       "OPENCODE_TUNNEL_ALLOWED_EMAILS must contain valid comma-separated emails",
     );
 
-  const localPort = Number(process.env.OPENCODE_TUNNEL_PORT ?? "8788");
+  const localPort = Number(readSecret("OPENCODE_TUNNEL_PORT") || "8788");
   if (!Number.isInteger(localPort) || localPort < 1 || localPort > 65535)
     fail("OPENCODE_TUNNEL_PORT must be between 1 and 65535");
-  const tunnelName = process.env.OPENCODE_TUNNEL_NAME?.trim() || "opencode";
+  const tunnelName = readSecret("OPENCODE_TUNNEL_NAME").trim() || "opencode";
   if (!/^[a-zA-Z0-9_-]+$/.test(tunnelName))
     fail(
       "OPENCODE_TUNNEL_NAME may contain only letters, numbers, underscores, and dashes",
     );
-  const sessionDuration = process.env.OPENCODE_TUNNEL_SESSION?.trim() || "24h";
+  const sessionDuration = readSecret("OPENCODE_TUNNEL_SESSION").trim() || "24h";
   if (!/^\d+(?:ns|us|µs|ms|s|m|h)$/.test(sessionDuration))
     fail("OPENCODE_TUNNEL_SESSION must look like 30m or 24h");
   return { allowedEmails, hostname, localPort, sessionDuration, tunnelName };
 }
 
 function requirePinnedPassword() {
-  const suppliedPassword = process.env.OPENCODE_SERVER_PASSWORD;
+  const suppliedPassword = readSecret("OPENCODE_SERVER_PASSWORD");
   if (suppliedPassword)
     run("opencode", ["service", "set", "password", suppliedPassword]);
   if (!quietlyRun("opencode", ["service", "get", "password"])?.trim())
@@ -280,7 +282,7 @@ async function cloudflareApi<T = unknown>(
     {
       method,
       headers: {
-        Authorization: `Bearer ${requireEnvironment("CLOUDFLARE_API_TOKEN")}`,
+        Authorization: `Bearer ${requireSecret("CLOUDFLARE_API_TOKEN")}`,
         "Content-Type": "application/json",
       },
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -380,9 +382,20 @@ function requireCommand(command: string) {
   return resolved;
 }
 
-function requireEnvironment(name: string) {
-  const value = process.env[name];
-  if (!value) fail(`missing ${name}\n\n${usage}`);
+function readSecret(name: string) {
+  const fromEnvironment = process.env[name];
+  if (fromEnvironment) return fromEnvironment;
+  const secretPath = path.join(secretsDirectory, name);
+  if (!existsSync(secretPath)) return "";
+  return readFileSync(secretPath, "utf8").trim();
+}
+
+function requireSecret(name: string) {
+  const value = readSecret(name);
+  if (!value)
+    fail(
+      `missing ${name}\n\nset it in the environment or in ${path.join(secretsDirectory, name)}\n\n${usage}`,
+    );
   return value;
 }
 

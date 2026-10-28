@@ -1,5 +1,5 @@
 ---
-description: Use for read-only-ish repo review and research runs dispatched by counselors.
+description: Use for read-only repo review and research runs dispatched by the counselors skill.
 mode: primary
 permission:
   edit: deny

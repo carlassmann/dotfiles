@@ -1,1 +1,61 @@
-{}
+# GitHub Dark, to match the ghostty and helix themes.
+gui:
+  border: rounded
+  nerdFontsVersion: "3"
+  commitAuthorShortLength: 8
+  commitHashLength: 8
+  showCommandLog: false
+  showRandomTip: false
+  showBottomLine: false
+  showNumstatInFilesView: true
+  showDivergenceFromBaseBranch: arrowAndNumber
+  sidePanelWidth: 0.25
+  expandFocusedSidePanel: true
+  wrapLinesInDiffView: false
+  useHunkModeInDiffView: true
+  skipNoStagedFilesWarning: true
+  filterMode: fuzzy
+  timeFormat: "2006-01-02 15:04"
+  shortTimeFormat: "15:04"
+  theme:
+    activeBorderColor: ["#58a6ff", bold]
+    inactiveBorderColor: ["#30363d"]
+    searchingActiveBorderColor: ["#d29922", bold]
+    optionsTextColor: ["#58a6ff"]
+    selectedLineBgColor: ["#264f78"]
+    inactiveViewSelectedLineBgColor: ["#21262d"]
+    cherryPickedCommitFgColor: ["#a371f7"]
+    cherryPickedCommitBgColor: ["#21262d"]
+    markedBaseCommitFgColor: ["#d29922"]
+    markedBaseCommitBgColor: ["#21262d"]
+    unstagedChangesColor: ["#f85149"]
+    defaultFgColor: ["#c9d1d9"]
+git:
+  # delta draws the diff; its remaining settings come from delta.* in ~/.gitconfig
+  diffRenderers:
+    - command: 'delta --paging=never --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"'
+  autoFetch: true
+  autoRefresh: true
+  autoDetectExternalChanges: true
+  fetchAll: true
+  autoForwardBranches: allBranches
+  autoStageResolvedConflicts: true
+  parseEmoji: true
+  truncateCopiedCommitHashesTo: 8
+  mainBranches: [main, master]
+  log:
+    order: topo-order
+    showGraph: always
+    showWholeGraph: true
+  commit:
+    autoWrapCommitMessage: true
+    autoWrapWidth: 72
+  merging:
+    manualCommit: true
+os:
+  editPreset: "helix (hx)"
+confirmOnQuit: true
+disableStartupPopups: true
+notARepository: quit
+update:
+  method: never

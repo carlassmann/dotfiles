@@ -27,33 +27,66 @@ try {
   process.exit(1);
 }
 
+// .scratch/ is in ~/.gitignore_global, so the extract never shows up in the
+// reviewed repo while still living inside the workspace agents can read.
+const scratchDir = ".scratch/pr-review";
+const warnings = [];
+
 console.log(`Extracting PR #${prNumber} from ${repo}...`);
 
-async function runGh(args) {
+function gh(args) {
   return new Promise((resolve) => {
     let child = spawn("gh", args, { stdio: ["ignore", "pipe", "pipe"] });
     let stdout = "";
     let stderr = "";
-    
+
     child.stdout.on("data", (data) => stdout += data.toString());
     child.stderr.on("data", (data) => stderr += data.toString());
-    child.on("close", (code) => resolve(code === 0 ? stdout : ""));
+    child.on("close", (code) => resolve({ code, stdout, stderr }));
   });
 }
 
-async function runGhJson(args) {
-  let output = await runGh(args);
+// Required data: a silent failure here would produce a believable but wrong
+// extract, so stop instead.
+async function runGh(args, { optional = false } = {}) {
+  let { code, stdout, stderr } = await gh(args);
+  if (code === 0) return stdout;
+
+  let detail = stderr.trim() || `exit ${code}`;
+  if (optional) {
+    warnings.push(`gh ${args.join(" ")} failed: ${detail}`);
+    return "";
+  }
+
+  console.error(`Error: gh ${args.join(" ")} failed\n${detail}`);
+  process.exit(1);
+}
+
+async function runGhJson(args, options) {
+  let output = await runGh(args, options);
   try {
     return JSON.parse(output || "{}");
   } catch {
+    warnings.push(`gh ${args.join(" ")} returned unparseable JSON`);
     return {};
   }
+}
+
+function formatChecks(rollup) {
+  if (!Array.isArray(rollup) || rollup.length === 0) return "No checks reported.";
+  return rollup
+    .map((entry) => {
+      let name = entry.name || entry.context || "check";
+      let state = entry.conclusion || entry.state || "unknown";
+      return `${String(state).padEnd(12)} ${name}`;
+    })
+    .join("\n");
 }
 
 let prJson = await runGhJson([
   "pr", "view", prNumber,
   "--repo", repo,
-  "--json", "number,title,author,baseRefName,headRefName,body,mergeStateStatus,reviewDecision,state,isDraft,url"
+  "--json", "number,title,author,baseRefName,headRefName,body,mergeStateStatus,reviewDecision,state,isDraft,url,statusCheckRollup"
 ]);
 
 if (!prJson.number) {
@@ -66,18 +99,16 @@ let [
   diff,
   inlineComments,
   issueComments,
-  reviews,
-  checksOutput
+  reviews
 ] = await Promise.all([
   runGhJson(["pr", "view", prNumber, "--repo", repo, "--json", "files"]),
   runGh(["pr", "diff", prNumber, "--repo", repo]),
-  runGhJson(["api", `repos/${owner}/${repoName}/pulls/${prNumber}/comments`, "--paginate"]).then(r => Array.isArray(r) ? r : []),
-  runGhJson(["api", `repos/${owner}/${repoName}/issues/${prNumber}/comments`, "--paginate"]).then(r => Array.isArray(r) ? r : []),
-  runGhJson(["api", `repos/${owner}/${repoName}/pulls/${prNumber}/reviews`, "--paginate"]).then(r => Array.isArray(r) ? r : []),
-  runGh(["pr", "checks", prNumber, "--repo", repo]).then(r => r || "Checks not available or no permission")
+  runGhJson(["api", `repos/${owner}/${repoName}/pulls/${prNumber}/comments`, "--paginate"], { optional: true }).then(r => Array.isArray(r) ? r : []),
+  runGhJson(["api", `repos/${owner}/${repoName}/issues/${prNumber}/comments`, "--paginate"], { optional: true }).then(r => Array.isArray(r) ? r : []),
+  runGhJson(["api", `repos/${owner}/${repoName}/pulls/${prNumber}/reviews`, "--paginate"], { optional: true }).then(r => Array.isArray(r) ? r : [])
 ]);
 
-let outputFile = `pr-review-extract-${prNumber}.md`;
+let outputFile = `${scratchDir}/${owner}-${repoName}-pr-${prNumber}.md`;
 
 function formatAuthor(author) {
   if (!author) return "";
@@ -157,9 +188,18 @@ content += `## 4) Final Outcome
 
 **Checks Status:**
 \`\`\`
-${checksOutput}
+${formatChecks(prJson.statusCheckRollup)}
 \`\`\`
+`;
 
+if (warnings.length > 0) {
+  content += `
+**Data warnings (sections below may be incomplete):**
+${warnings.map((warning) => `- ${warning}`).join("\n")}
+`;
+}
+
+content += `
 ## 5) Review Lessons (for AI learning)
 
 _Extracted from review patterns. Review manually for accuracy._
@@ -216,5 +256,13 @@ style_signals: []
 \`\`\`
 `;
 
+await fs.mkdir(scratchDir, { recursive: true });
 await fs.writeFile(outputFile, content);
 console.log(`\n✅ Extracted to: ${outputFile}`);
+
+if (warnings.length > 0) {
+  console.log("\n⚠️  Incomplete data:");
+  for (let warning of warnings) {
+    console.log(`  - ${warning}`);
+  }
+}

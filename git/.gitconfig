@@ -2,7 +2,7 @@
 	defaultBranch = main
 
 [core]
-	editor = hx +
+	editor = hx
 	excludesfile = ~/.gitignore_global
 
 [pull]
