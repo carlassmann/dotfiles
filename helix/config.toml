@@ -1,4 +1,6 @@
-theme = "github_dark"
+# themes/omarchy.toml is created by install.sh: the live Omarchy theme on Linux,
+# github_dark on macOS
+theme = "omarchy"
 
 [editor]
 color-modes = true

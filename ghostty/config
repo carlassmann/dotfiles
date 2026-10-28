@@ -1,16 +1,14 @@
+# macOS only — on Omarchy, ~/.config/ghostty/config belongs to Omarchy and just
+# includes shared.conf
+config-file = shared.conf
+
 theme = light:Github Light Default,dark:Github Dark Default
 
 font-family = GeistMono Nerd Font
 font-size = 15
-adjust-cell-height = 50%
-
-cursor-style-blink = false
 
 maximize = true
-window-padding-balance = true
-window-padding-color = extend
 
 shell-integration-features = no-cursor
-mouse-hide-while-typing = true 
 
 macos-option-as-alt = left

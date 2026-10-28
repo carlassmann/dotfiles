@@ -8,10 +8,11 @@ fi
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
-eval "$(fnm env --use-on-cd --shell zsh)"
+eval "$(mise activate zsh)"
 source <(fzf --zsh)
 
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+command -v work >/dev/null && eval "$(work shell-init zsh)"
 [ -f "$HOME/.config/op/plugins.sh" ] && source "$HOME/.config/op/plugins.sh"
 
 alias l="ls -lah"
@@ -23,6 +24,12 @@ alias c="clear"
 alias ..="cd .."
 alias ...="cd ../.."
 alias p="cd ~/Developer"
-alias cpwd="pwd | pbcopy"
 alias prx="pr-review"
 alias path='echo $PATH | tr ":" "\n"'
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias cpwd="pwd | pbcopy"
+else
+  alias cpwd="pwd | wl-copy"
+  alias open="xdg-open"
+fi

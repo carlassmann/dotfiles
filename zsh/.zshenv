@@ -1,4 +1,9 @@
-export PATH="/opt/homebrew/bin:$PATH"
+if [[ "$OSTYPE" == darwin* ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+elif [ -r /usr/share/omarchy/default/bash/env-bootstrap ]; then
+  # OMARCHY_PATH and mise shims; plain sh, safe to source from zsh
+  source /usr/share/omarchy/default/bash/env-bootstrap
+fi
 export PATH="$HOME/.bun/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/Developer/dotfiles/scripts/bin:$PATH"

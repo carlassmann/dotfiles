@@ -11,12 +11,23 @@ cd ~/Developer/dotfiles
 ./install.sh --full
 ```
 
-`--full` runs `brew bundle` against `Brewfile`, installs bun globals and herdr, and applies `macos/defaults.sh` (keyboard, dock, finder, Hyperkey prefs). Without it, `install.sh` only creates symlinks.
+`--full` runs `brew bundle` against `Brewfile`, installs node and bun via mise, bun globals and herdr, and applies `macos/defaults.sh` (keyboard, dock, finder, Hyperkey prefs). Without it, `install.sh` only creates symlinks.
 
-Afterwards:
+### Omarchy (Arch)
 
 ```bash
-fnm install --lts
+git clone https://github.com/carlassmann/dotfiles ~/Developer/dotfiles
+cd ~/Developer/dotfiles
+./install.sh --full
+```
+
+`--full` installs zsh, delta, git-lfs, helix, marksman, uv and Geist Mono via `omarchy pkg add`, links `hx` to `helix`, makes zsh the login shell, then node and bun via mise and bun globals. Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
+
+Themes follow `omarchy theme set`: Ghostty, Helix (`omarchy` theme), Claude Code (`custom:omarchy`), opencode (`system`) and herdr (`terminal`) all retint. Omarchy owns `~/.config/ghostty/config` and `~/.config/herdr/config.toml`; install.sh only appends an include of `ghostty/shared.conf`. Font: `omarchy font set "GeistMono Nerd Font"`.
+
+Afterwards (both):
+
+```bash
 $EDITOR ~/.config/secrets/env   # export KEY="value" per line, sourced by zshenv
 exec zsh
 ```
@@ -46,13 +57,14 @@ Log out once so keyboard defaults take effect.
 | `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
 | `git/.gitignore_global` | `~/.gitignore_global` |
 | `aerospace/aerospace.toml` | `~/.aerospace.toml` |
-| `ghostty/config` | `~/.config/ghostty/config` |
-| `herdr/config.toml` | `~/.config/herdr/config.toml` |
-| `lazygit/config.yml` | `~/Library/Application Support/lazygit/config.yml` |
+| `ghostty/config` | `~/.config/ghostty/config` (macOS only) |
+| `ghostty/shared.conf` | `~/.config/ghostty/shared.conf`, included by either config |
+| `herdr/config.toml` | `~/.config/herdr/config.toml` (macOS only) |
+| `lazygit/config.yml` | `~/Library/Application Support/lazygit/config.yml`, `~/.config/lazygit/config.yml` on Linux |
 | `macos/defaults.sh` | run by `install.sh --full`, not linked |
-| `helix/` | `~/.config/helix` |
+| `helix/` | `~/.config/helix`; `themes/omarchy.toml` is generated (Omarchy theme, or github_dark on macOS) |
 | `agents/AGENTS.md` | `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md` |
-| `agents/skills/` | `~/.claude/skills`, `~/.codex/skills`, `~/.config/opencode/skills` |
+| `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |
 | `agents/claude/settings.json` | `~/.claude/settings.json` |
 | `agents/opencode/*` | `~/.config/opencode/*` |
 | `agents/counselors/config.json` | `~/.config/counselors/config.json` |
@@ -66,26 +78,6 @@ Log out once so keyboard defaults take effect.
 - Helix is used as a file browser, not an IDE. `L d` / `L l` toggle dark / light theme.
 - Hyperkey maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for AeroSpace.
 
-### Remote opencode
-
-`node scripts/bin/opencode-tunnel.ts ensure` starts OpenCode's localhost background service,
-creates a Cloudflare tunnel, protects it with an email allow-list in Access, and installs a
-restart-on-crash macOS LaunchAgent. `status` checks the layers; `uninstall` removes only the
-LaunchAgent. Node ≥ 24 runs the TypeScript directly.
-
-Keep private values in `~/.config/secrets/env`, never this repository:
-
-```sh
-export OPENCODE_TUNNEL_HOSTNAME="..."
-export OPENCODE_TUNNEL_ALLOWED_EMAILS="...,..."
-export OPENCODE_SERVER_PASSWORD="..." # needed initially; optional after pinning
-export CLOUDFLARE_API_TOKEN="..." # optional after Access exists
-```
-
-Run `cloudflared tunnel login` once first. `ensure` configures Access before DNS or tunnel
-startup and stops the tunnel if Access verification fails. Generated credentials, tunnel
-configuration, hostname, allow-list, token, and password remain outside the repository.
-
 ### AeroSpace
 
 - Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
@@ -96,5 +88,6 @@ configuration, hostname, allow-list, token, and password remain outside the repo
 ### Not in Homebrew
 
 - herdr: installed by `install.sh --full` via `curl -fsSL https://herdr.dev/install.sh | sh`
-- Node via `fnm`
-- `work`, `opencode`, `counselors`, `agent-browser` via bun globals
+- Node and bun via `mise`
+- `work`: cloned to `~/Developer/work-cli`, built and `bun link`ed (not on npm)
+- `opencode`, `counselors`, `agent-browser` via bun globals

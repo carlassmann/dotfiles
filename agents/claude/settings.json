@@ -76,7 +76,7 @@
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
+  "theme": "custom:omarchy",
   "agentPushNotifEnabled": true,
   "voiceEnabled": true,
   "model": "claude-fable-5-1[1m]"
