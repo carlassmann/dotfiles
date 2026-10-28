@@ -92,4 +92,4 @@ Log out once so keyboard defaults take effect.
 
 - herdr: installed by `install.sh --full` via `curl -fsSL https://herdr.dev/install.sh | sh`
 - Node and bun via `mise`
-- `work` (from GitHub), `opencode`, `agent-browser` via bun globals
+- `work` (from GitHub), `portless`, `opencode`, `agent-browser` via bun globals; `--full` installs the portless proxy service (sudo, port 443)

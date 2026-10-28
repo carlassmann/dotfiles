@@ -196,6 +196,7 @@ install_bun_globals() {
   bun add -g \
     @opencode/cli \
     git+https://github.com/ccssmnn/work-cli.git \
+    portless \
     agent-browser \
     prettier \
     prettier-plugin-tailwindcss \
@@ -203,6 +204,14 @@ install_bun_globals() {
     typescript-language-server \
     vscode-langservers-extracted \
     @tailwindcss/language-server
+}
+
+# work routes commands through portless' HTTPS proxy on :443; the service
+# install elevates itself with sudo
+install_portless_service() {
+  command -v portless >/dev/null 2>&1 || return 0
+  portless service status | grep -q "Installed: yes" && return 0
+  portless service install
 }
 
 install_rift_service() {
@@ -248,6 +257,7 @@ if [ "${1:-}" = "--full" ]; then
   fi
   install_mise_tools
   install_bun_globals
+  install_portless_service
   install_herdr
   if [ "$OS" = Darwin ]; then
     install_rift_service
