@@ -79,20 +79,6 @@ Log out once so keyboard defaults take effect.
   `~/.gitignore_global`, so it stays inside the workspace without showing up as repo changes.
   `pr-review` uses it.
 
-### Tailnet access
-
-Tailscale can serve OpenCode's localhost service to your devices:
-
-```sh
-tailscale serve --bg --https=8788 http://127.0.0.1:8788
-# https://<machine>.<tailnet>.ts.net:8788, tailnet-only
-```
-
-Only tailnet members can reach it; the pinned OpenCode password still applies.
-Serve config persists across reboots. Port 443 (the no-port URL) is taken by a root
-`portless proxy` on this machine, hence the explicit port. Remove with
-`tailscale serve --https=8788 off`.
-
 ### Rift
 
 - Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
