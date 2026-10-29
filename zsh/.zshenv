@@ -11,4 +11,3 @@ export BUN_INSTALL="$HOME/.bun"
 export EDITOR="hx"
 
 [ -f "$HOME/.config/secrets/env" ] && source "$HOME/.config/secrets/env"
-[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"

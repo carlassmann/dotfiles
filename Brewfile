@@ -1,12 +1,10 @@
-tap "nikitabobko/tap"
-
 # shell
 brew "starship"
 brew "zoxide"
 brew "fzf"
 brew "mise"
 brew "uv"
-brew "deno"
+brew "shellcheck"
 
 # git
 brew "gh"
