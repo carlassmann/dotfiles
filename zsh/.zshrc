@@ -51,4 +51,6 @@ else
   alias cpwd="pwd | wl-copy"
   alias open="xdg-open"
 fi
-[ -f ~/.acme.sh/acme.sh.env ] && . ~/.acme.sh/acme.sh.env
+
+# machine-only lines (e.g. what tool installers append) stay out of the repo
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
