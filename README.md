@@ -21,7 +21,7 @@ cd ~/Developer/dotfiles
 ./install.sh --full
 ```
 
-`--full` installs zsh, delta, git-lfs, helix, marksman, uv, lsof (portless) and Geist Mono via `omarchy pkg add`, links `hx` to `helix`, makes zsh the login shell, then node and bun via mise and bun globals. Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
+`--full` installs `arch-packages.txt` via `omarchy pkg add`, links `hx` to `helix`, makes zsh the login shell, then node and bun via mise and bun globals. Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
 
 Themes follow `omarchy theme set`: Ghostty, Helix (`omarchy` theme), Claude Code (`custom:omarchy`), opencode (`system`) and herdr (`terminal`) all retint. Omarchy owns `~/.config/ghostty/config` and `~/.config/herdr/config.toml`; install.sh only appends an include of `ghostty/shared.conf`. Font: `omarchy font set "GeistMono Nerd Font"`.
 
@@ -53,7 +53,7 @@ Log out once so keyboard defaults take effect.
 | path | linked to |
 | --- | --- |
 | `zsh/.zshenv` | `~/.zshenv` (PATH, env, secrets) |
-| `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases) |
+| `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases; sources untracked `~/.zshrc.local` for machine-only lines) |
 | `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
 | `git/.gitignore_global` | `~/.gitignore_global` |
 | `rift/config.toml` | `~/.config/rift/config.toml` (macOS only) |
@@ -63,6 +63,7 @@ Log out once so keyboard defaults take effect.
 | `herdr/config.toml` | `~/.config/herdr/config.toml` (macOS only) |
 | `lazygit/config.yml` | `~/Library/Application Support/lazygit/config.yml`, `~/.config/lazygit/config.yml` on Linux |
 | `macos/defaults.sh` | run by `install.sh --full`, not linked |
+| `Brewfile`, `arch-packages.txt` | packages for `install.sh --full` on macOS / Arch |
 | `helix/` | `~/.config/helix`; `themes/omarchy.toml` is generated (Omarchy theme, or github_dark on macOS) |
 | `agents/AGENTS.md` | `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md` |
 | `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |

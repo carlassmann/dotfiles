@@ -1,0 +1,12 @@
+# Installed by `install.sh --full` via `omarchy pkg add`.
+# Omarchy already ships gh, mise, starship, zoxide, fzf, lazygit, lazydocker, ghostty and herdr.
+zsh
+git-delta
+git-lfs
+helix
+marksman
+uv
+shellcheck
+# portless needs it
+lsof
+otf-geist-mono-nerd

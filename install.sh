@@ -149,14 +149,8 @@ include_ghostty_shared() {
 }
 
 install_arch_packages() {
-  local packages=(
-    zsh
-    git-delta git-lfs
-    helix marksman
-    uv
-    lsof
-    otf-geist-mono-nerd
-  )
+  local packages
+  mapfile -t packages < <(grep -v '^#' "$DOTFILES_DIR/arch-packages.txt" | grep -v '^$')
   local missing=()
   for pkg in "${packages[@]}"; do
     pacman -Qq "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
