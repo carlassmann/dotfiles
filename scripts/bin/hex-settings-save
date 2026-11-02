@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Copy Hex's live settings.json back into dotfiles (see seed_hex_settings in install.sh)
+
+set -euo pipefail
+
+dotfiles="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../.." && pwd)"
+if [ "$(uname -s)" = Darwin ]; then
+  source="$HOME/Library/Application Support/hex/settings.json"
+else
+  source="${XDG_DATA_HOME:-$HOME/.local/share}/hex/settings.json"
+fi
+
+cp "$source" "$dotfiles/hex/settings.json"
+git -C "$dotfiles" --no-pager diff --stat -- hex/settings.json

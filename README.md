@@ -69,7 +69,8 @@ Log out once so keyboard defaults take effect.
 | `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |
 | `agents/claude/settings.json` | `~/.claude/settings.json` |
 | `agents/opencode/*` | `~/.config/opencode/*` |
-| `scripts/bin/*` | `~/.local/bin/*` (on PATH: `pr-review`) |
+| `scripts/bin/*` | `~/.local/bin/*` (on PATH: `pr-review`, `hex-settings-save`) |
+| `hex/settings.json` | copied once to Hex's data folder (`~/.local/share/hex`, macOS `~/Library/Application Support/hex`); Hex saves by rename, so no symlink. `hex-settings-save` copies the live file back |
 
 ## Workflow
 

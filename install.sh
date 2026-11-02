@@ -220,6 +220,24 @@ install_herdr() {
   curl -fsSL https://herdr.dev/install.sh | sh
 }
 
+# Hex replaces settings.json by rename on every save, which would turn a symlink
+# into a plain file, so seed a copy once. Save changes back with hex-settings-save.
+seed_hex_settings() {
+  local target
+  if [ "$OS" = Darwin ]; then
+    target="$HOME/Library/Application Support/hex/settings.json"
+  else
+    target="${XDG_DATA_HOME:-$HOME/.local/share}/hex/settings.json"
+  fi
+  if [ -e "$target" ]; then
+    echo "- skipped $target (exists; hex-settings-save copies it back)"
+    return 0
+  fi
+  mkdir -p "$(dirname "$target")"
+  install -m 600 "$DOTFILES_DIR/hex/settings.json" "$target"
+  echo "✓ $target (seeded)"
+}
+
 ensure_secrets_file() {
   mkdir -p "$HOME/.config/secrets"
   touch "$HOME/.config/secrets/env"
@@ -241,6 +259,7 @@ link_skills "$HOME/.claude/skills"
 link_skills "$HOME/.codex/skills"
 ensure_claude_theme
 link_scripts
+seed_hex_settings
 
 ensure_secrets_file
 
