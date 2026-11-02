@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=T3 Code (Beta)
+Exec=/usr/bin/t3code --ozone-platform=x11 %U
+Terminal=false
+NoDisplay=true
+StartupNotify=false
+MimeType=x-scheme-handler/t3code;

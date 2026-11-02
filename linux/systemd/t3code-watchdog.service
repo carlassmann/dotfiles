@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart T3 Code if its server is not answering
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/t3code-watchdog

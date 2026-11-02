@@ -63,6 +63,9 @@ Log out once so keyboard defaults take effect.
 | `herdr/config.toml` | `~/.config/herdr/config.toml` (macOS only) |
 | `lazygit/config.yml` | `~/Library/Application Support/lazygit/config.yml`, `~/.config/lazygit/config.yml` on Linux |
 | `macos/defaults.sh` | run by `install.sh --full`, not linked |
+| `linux/bin/*` | `~/.local/bin/*` (Linux only: `t3code-watchdog`) |
+| `linux/systemd/*` | copied to `~/.config/systemd/user/` (Linux, when T3 Code is installed); `t3code-watchdog.timer` restarts T3 Code when `:3773` stops answering |
+| `linux/autostart/com.t3tools.T3Code.desktop` | copied once to `~/.config/autostart/`; starts T3 Code with `--ozone-platform=x11` (on Wayland it hangs before its backend starts) |
 | `Brewfile`, `arch-packages.txt` | packages for `install.sh --full` on macOS / Arch |
 | `helix/` | `~/.config/helix`; `themes/omarchy.toml` is generated (Omarchy theme, or github_dark on macOS) |
 | `agents/AGENTS.md` | `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md` |

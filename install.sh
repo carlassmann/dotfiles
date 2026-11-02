@@ -78,10 +78,10 @@ link_all() {
 }
 
 link_scripts() {
-  local script
-  for script in "$DOTFILES_DIR"/scripts/bin/*; do
+  local dir="$1" script
+  for script in "$DOTFILES_DIR/$dir"/*; do
     [ -e "$script" ] || continue
-    link "scripts/bin/$(basename "$script")" "$HOME/.local/bin/$(basename "$script")"
+    link "$dir/$(basename "$script")" "$HOME/.local/bin/$(basename "$script")"
   done
 }
 
@@ -238,6 +238,23 @@ seed_hex_settings() {
   echo "✓ $target (seeded)"
 }
 
+# Copied, not linked: systemctl disable deletes a unit file that is a symlink
+install_t3code_watchdog() {
+  command -v t3code >/dev/null 2>&1 || return 0
+  local unit_dir="$HOME/.config/systemd/user"
+  local autostart="$HOME/.config/autostart/com.t3tools.T3Code.desktop"
+
+  mkdir -p "$unit_dir"
+  install -m 644 "$DOTFILES_DIR"/linux/systemd/t3code-watchdog.{service,timer} "$unit_dir/"
+  # T3 owns its autostart entry once it exists; the watchdog keeps the X11 flag in it
+  if [ ! -e "$autostart" ]; then
+    install -D -m 644 "$DOTFILES_DIR/linux/autostart/com.t3tools.T3Code.desktop" "$autostart"
+  fi
+  systemctl --user daemon-reload
+  systemctl --user enable --now t3code-watchdog.timer 2>/dev/null
+  echo "✓ t3code-watchdog.timer"
+}
+
 ensure_secrets_file() {
   mkdir -p "$HOME/.config/secrets"
   touch "$HOME/.config/secrets/env"
@@ -258,8 +275,10 @@ link_helix_theme
 link_skills "$HOME/.claude/skills"
 link_skills "$HOME/.codex/skills"
 ensure_claude_theme
-link_scripts
+link_scripts scripts/bin
+[ "$OS" = Darwin ] || link_scripts linux/bin
 seed_hex_settings
+[ "$OS" = Darwin ] || install_t3code_watchdog
 
 ensure_secrets_file
 
