@@ -55,7 +55,16 @@ workspace_auto_back_and_forth = false
 prevent_wrapping = false
 workspace_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 workspace_rules = []
-app_rules = []
+# Helium profiles share a bundle id; the window title ends with the profile name.
+# New windows start untitled, so rules must re-run once the title arrives.
+reapply_app_rules_on_title_change = true
+app_rules = [
+  { app_id = "net.imput.helium", title_regex = "Helium - Carl@SynTwin$", workspace = 0 },
+  { app_id = "net.imput.helium", title_regex = "Helium - Carl$", workspace = 1 },
+  { app_id = "com.t3tools.t3code", workspace = 2 },
+  # Alkalye PWA, installed through Chrome
+  { app_id = "com.google.Chrome.app.eihpgemhbeobfbkiheflebibgpkaokpc", workspace = 3 },
+]
 
 [modifier_combinations]
 hyper = "Ctrl + Alt + Shift + Meta"
