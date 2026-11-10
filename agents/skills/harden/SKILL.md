@@ -13,6 +13,7 @@ Identify what proved essential, then:
 - Replace accidental structure with the simplest architecture the evidence justifies
 - Prefer deep modules, clear ownership, readable names, one source of truth
 - Keep compatibility only for real consumers
+- Keep only what is worth maintaining: everything merged is a burden, so cut parts whose value doesn't pay for their upkeep
 - Record stable, non-obvious intent in the project's existing docs
 - Add or consolidate only high-signal tests for important behavior and invariants
 

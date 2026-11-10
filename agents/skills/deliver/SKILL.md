@@ -11,8 +11,8 @@ Prepare the implementation for a human merge decision. No new product scope unle
 2. Exercise affected behavior in the real runtime. For UI, test mobile and desktop and capture current screenshots.
 3. Run all repository-required checks and affected E2E flows. Diagnose and fix failures.
 4. Review the diff. One bounded cycle, described below. Not a loop.
-5. Clean up: delete the temporary tests, or promote the ones worth keeping into the suite. Run `simplify` once for quality and readability. Re-run repository checks.
-6. Create or update the PR: why, decisions, scope, tradeoffs, visual evidence, known risks. Apply `unslop`. Remove stale claims and screenshots.
+5. Clean up: delete the temporary tests, or promote the ones worth keeping into the suite. Weigh the diff: everything merged is a burden to maintain, so cut each part whose value doesn't pay for its upkeep (speculative cases, duplicate paths, legacy handling, extra UI states, persisted fields). Run `simplify` once for quality and readability. Re-run repository checks.
+6. Create or update the PR: why, decisions, scope, weight (product and test lines, what was cut), tradeoffs, visual evidence, known risks. Apply `unslop`. Remove stale claims and screenshots.
 7. Confirm final branch, push, PR, CI, and mergeability state.
 
 Never merge unless asked. Never claim success without runtime and check evidence. Report outcome, verification, PR state, unresolved risks.
