@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Preserve CLIProxyAPI cooldown deadlines in Claude's stream for T3 Code."""
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import subprocess
+import sys
+import time
+import uuid
+
+COOLDOWN = re.compile(r"cooling down.*\(reset after (?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?\)")
+MAX_COOLDOWN_SECONDS = 30 * 24 * 60 * 60
+
+
+def reset_info(message, now):
+    if message.get("type") != "assistant" or message.get("error") != "rate_limit" or message.get("parent_tool_use_id") is not None:
+        return None
+    params = message.get("api_error_params") or {}
+    if not isinstance(params, dict):
+        return None
+    existing = params.get("rate_limit_info") or {}
+    if not isinstance(existing, dict):
+        return None
+    if existing.get("resetsAt") is not None:
+        return None
+    content = message.get("message", {}).get("content", [])
+    text = "\n".join(block.get("text", "") for block in content if block.get("type") == "text")
+    match = COOLDOWN.search(text)
+    if not match:
+        return None
+    hours, minutes, seconds = (int(value or 0) for value in match.groups())
+    delay = hours * 3600 + minutes * 60 + seconds
+    if not 0 < delay <= MAX_COOLDOWN_SECONDS:
+        return None
+    # The proxy rounds its remaining cooldown; leave a small margin at the boundary.
+    return {"status": "rejected", "resetsAt": int(now + delay + 2)}
+
+
+def translate(line, now):
+    try:
+        message = json.loads(line)
+    except ValueError:
+        return [line]
+    if not isinstance(message, dict):
+        return [line]
+    info = reset_info(message, now)
+    if info is None:
+        return [line]
+    params = message.get("api_error_params") or {}
+    message["api_error_params"] = params
+    params["rate_limit_info"] = {**params.get("rate_limit_info", {}), **info}
+    event = {
+        "type": "rate_limit_event", "rate_limit_info": info,
+        "uuid": str(uuid.uuid4()), "session_id": message.get("session_id", ""),
+    }
+    return [json.dumps(event) + "\n", json.dumps(message) + "\n"]
+
+
+def main():
+    profile_path = Path.home() / ".cli-proxy-api/client.json"
+    if not profile_path.exists():
+        sys.exit("No proxy client profile; run agent-proxy apply first.")
+    profile = json.loads(profile_path.read_text())
+    executable = profile.get("claude_binary")
+    if not executable or Path(executable).resolve() == Path(__file__).resolve():
+        sys.exit("Missing original Claude binary; run agent-proxy apply.")
+    args = sys.argv[1:]
+    stream = any(args[index:index + 2] == ["--output-format", "stream-json"] for index in range(len(args))) or "--output-format=stream-json" in args
+    if not stream or profile.get("enabled") is False:
+        os.execv(executable, [executable, *args])
+    child = subprocess.Popen([executable, *args], stdout=subprocess.PIPE, text=True, bufsize=1)
+    def forward(signum, _frame):
+        if child.poll() is None:
+            child.send_signal(signum)
+    for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        signal.signal(signum, forward)
+    try:
+        for line in child.stdout:
+            for output in translate(line, time.time()):
+                sys.stdout.write(output)
+            sys.stdout.flush()
+    except BrokenPipeError:
+        child.terminate()
+    result = child.wait()
+    return result if result >= 0 else 128 - result
+
+
+if __name__ == "__main__":
+    sys.exit(main())

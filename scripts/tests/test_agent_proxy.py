@@ -38,6 +38,8 @@ class ClientSettingsTest(unittest.TestCase):
         settings = proxy.read_json(proxy.CLAUDE)
         self.assertEqual(settings["env"]["EXISTING"], "keep")
         self.assertEqual(settings["env"]["ANTHROPIC_AUTH_TOKEN"], "private-client-key")
+        self.assertTrue(proxy.read_json(proxy.T3)["autoResumeLimitedThreads"])
+        self.assertEqual(proxy.read_json(proxy.T3)["providerInstances"]["claudeAgent"]["config"]["binaryPath"], str(proxy.REPO / "scripts/bin/claude-proxy"))
         self.assertEqual(proxy.CLAUDE.stat().st_mode & 0o777, 0o600)
         settings = proxy.read_json(proxy.T3)
         self.assertTrue(settings["unrelated"])
@@ -45,6 +47,12 @@ class ClientSettingsTest(unittest.TestCase):
         proxy.save_json(proxy.T3, settings)
         proxy.apply(self.template)
         self.assertEqual(proxy.read_json(proxy.T3)["usageLimitSources"][proxy.SOURCE]["managementKey"], "__secret_reference__")
+        original = proxy.read_json(proxy.PROFILE)["claude_binary"]
+        settings = proxy.read_json(proxy.T3)
+        settings["providerInstances"]["claudeAgent"]["config"]["binaryPath"] = "/different/checkout/scripts/bin/claude-proxy"
+        proxy.save_json(proxy.T3, settings)
+        proxy.apply()
+        self.assertEqual(proxy.read_json(proxy.PROFILE)["claude_binary"], original)
 
     def test_disabled_profile_stays_disabled_after_dotfiles_apply(self):
         proxy.apply()

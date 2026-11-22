@@ -118,6 +118,20 @@ def apply(template=None):
         # Preserve T3's secret-store reference when the same hub is reapplied.
         source["managementKey"] = previous.get("managementKey", profile["management_key"]) if previous.get("url") == connection_url else profile["management_key"]
         sources[SOURCE] = source
+        if ready:
+            adapter = str(REPO / "scripts/bin/claude-proxy")
+            instance = settings.setdefault("providerInstances", {}).setdefault("claudeAgent", {"driver": "claudeAgent"})
+            config = instance.setdefault("config", {})
+            original = config.get("binaryPath")
+            if original and Path(original).name != "claude-proxy":
+                profile["claude_binary"] = original
+            elif not profile.get("claude_binary"):
+                profile["claude_binary"] = shutil.which("claude")
+            if not profile.get("claude_binary"):
+                raise SystemExit("Claude executable not found; install Claude before connecting T3.")
+            save_json(PROFILE, profile)
+            config["binaryPath"] = adapter
+            settings["autoResumeLimitedThreads"] = True
         save_json(T3, settings)
     print(f"Claude proxy: {connection_url}" if ready else "Claude keeps its existing connection until the first proxy account is logged in.")
     print("T3 Code: Settings > Providers > Usage providers.")
@@ -198,6 +212,9 @@ def disable():
     if T3.exists():
         settings = read_json(T3)
         settings.get("usageLimitSources", {}).pop(SOURCE, None)
+        config = settings.get("providerInstances", {}).get("claudeAgent", {}).get("config", {})
+        if config.get("binaryPath") == str(REPO / "scripts/bin/claude-proxy"):
+            config["binaryPath"] = profile.get("claude_binary", "")
         save_json(T3, settings)
     profile["enabled"] = False
     save_json(PROFILE, profile)

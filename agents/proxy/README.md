@@ -95,6 +95,21 @@ systemctl --user disable --now cli-proxy-api
 tailscale serve --https=8317 off
 ```
 
+## Resume after quota resets
+
+`agent-proxy apply` enables T3's automatic limit recovery and selects the
+`claude-proxy` adapter as its Claude executable. The original Claude executable
+stays in the private client profile; regular terminal sessions keep using it.
+The adapter forwards Claude's stream and translates the proxy's explicit
+`cooling down ... (reset after ...)` errors into Claude reset events that T3
+can schedule. It adds a two-second margin before retrying. Native reset metadata
+is preserved. Unknown deadlines stay unknown rather than creating retry loops.
+
+New Claude sessions use the adapter. Existing failures with no reset time need
+one manual or scheduled retry before T3 can capture the deadline. `disable`
+restores T3's original Claude executable. The adapter does not change the model,
+clear account cooldowns, enable overage, or send continuation messages itself.
+
 Source and configuration reference:
 https://github.com/router-for-me/CLIProxyAPI
 https://github.com/router-for-me/CLIProxyAPI/blob/main/config.example.yaml
