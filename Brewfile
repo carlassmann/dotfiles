@@ -4,6 +4,7 @@ brew "zoxide"
 brew "fzf"
 brew "mise"
 brew "uv"
+brew "python"
 brew "shellcheck"
 
 # git

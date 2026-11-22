@@ -1,0 +1,8 @@
+{
+  "config-version": 8,
+  "server": {"host": "127.0.0.1", "port": 8317},
+  "management": {"allow-remote": true, "secret-key": "MANAGEMENT_KEY", "disable-auto-update-panel": true},
+  "access": {"api-keys": ["API_KEY"]},
+  "oauth": {"auth-dir": "AUTH_DIR"},
+  "routing": {"strategy": "fill-first", "session-affinity": true, "session-affinity-subagents": true}
+}

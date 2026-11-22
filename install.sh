@@ -19,7 +19,6 @@ links=(
 
   # Claude reads ~/.claude — link tracked config individually so runtime data
   # (projects, history, tasks) stays out of the repo. Skills: see link_skills.
-  "agents/claude/settings.json:$HOME/.claude/settings.json"
   "agents/AGENTS.md:$HOME/.claude/CLAUDE.md"
 
   # Codex picks up AGENTS.md and skills/ from ~/.codex
@@ -264,6 +263,11 @@ ensure_secrets_file() {
 echo "🚀 linking dotfiles from $DOTFILES_DIR"
 
 link_all "${links[@]}"
+if [ -f "$HOME/.cli-proxy-api/client.json" ]; then
+  python3 "$DOTFILES_DIR/scripts/bin/agent-proxy" apply --template "$DOTFILES_DIR/agents/claude/settings.json"
+else
+  link agents/claude/settings.json "$HOME/.claude/settings.json"
+fi
 if [ "$OS" = Darwin ]; then
   link_all "${macos_links[@]}"
 else

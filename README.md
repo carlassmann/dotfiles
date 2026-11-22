@@ -36,6 +36,10 @@ exec zsh
 
 Sign in: 1Password, `gh auth login`, `claude`, `codex`, `opencode auth login`, Wispr Flow, browsers.
 
+For shared Claude accounts across the tailnet, see [proxy setup](agents/proxy/README.md).
+Run `agent-proxy host` on the Linux host and import its private profile with
+`agent-proxy client` on macOS or Linux. T3 Code shows the pooled accounts under Providers.
+
 Grant in System Settings → Privacy & Security:
 
 | app | permission |
@@ -70,7 +74,8 @@ Log out once so keyboard defaults take effect.
 | `helix/` | `~/.config/helix`; `themes/omarchy.toml` is generated (Omarchy theme, or github_dark on macOS) |
 | `agents/AGENTS.md` | `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md` |
 | `agents/skills/*` | each skill into `~/.claude/skills/`, `~/.codex/skills/`; whole dir to `~/.config/opencode/skills` |
-| `agents/claude/settings.json` | `~/.claude/settings.json` |
+| `agents/claude/settings.json` | `~/.claude/settings.json`; copied with private local settings when `agent-proxy` is configured |
+| `agents/proxy/config.json` | seed for `agent-proxy host`; local keys and OAuth tokens stay outside the repo |
 | `agents/opencode/*` | `~/.config/opencode/*` |
 | `scripts/bin/*` | `~/.local/bin/*` (on PATH: `pr-review`, `hex-settings-save`) |
 | `hex/settings.json` | copied once to Hex's data folder (`~/.local/share/hex`, macOS `~/Library/Application Support/hex`); Hex saves by rename, so no symlink. `hex-settings-save` copies the live file back |
