@@ -26,6 +26,11 @@ fi
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(mise activate zsh)"
+if [[ "$OSTYPE" == linux* && -x "$HOME/.local/bin/heavy" ]]; then
+  # mise refreshes PATH at each prompt; functions keep the queue wrapper first.
+  bun() { "$HOME/.local/bin/bun" "$@"; }
+  bunx() { "$HOME/.local/bin/bunx" "$@"; }
+fi
 source <(fzf --zsh)
 
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
