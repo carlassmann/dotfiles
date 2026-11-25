@@ -59,6 +59,7 @@ Log out once so keyboard defaults take effect.
 | `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases; sources untracked `~/.zshrc.local` for machine-only lines) |
 | `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
 | `git/.gitignore_global` | `~/.gitignore_global` |
+| `spaceman/config.toml` | `~/Library/Application Support/Spaceman/config.toml` (macOS only; edits from the Spaceman settings UI land here) |
 | `karabiner/` | `~/.config/karabiner` (macOS only) |
 | `ghostty/config` | `~/.config/ghostty/config` (macOS only) |
 | `ghostty/shared.conf` | `~/.config/ghostty/shared.conf`, included by either config |

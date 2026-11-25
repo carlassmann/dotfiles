@@ -1,0 +1,15 @@
+# Spaceman configuration.
+version = 1
+
+[shortcuts]
+modifier = "ctrl+alt+cmd"
+
+[settings]
+single_window_max_width = 1680
+
+[settings.gaps]
+inner = 3
+top = 3
+bottom = 3
+left = 3
+right = 3

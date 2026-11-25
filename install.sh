@@ -34,6 +34,7 @@ links=(
 )
 
 macos_links=(
+  "spaceman/config.toml:$HOME/Library/Application Support/Spaceman/config.toml"
   "karabiner:$HOME/.config/karabiner"
   "ghostty/config:$HOME/.config/ghostty/config"
   "herdr/config.toml:$HOME/.config/herdr/config.toml"
