@@ -24,7 +24,6 @@ cask "codex"
 
 # desktop
 cask "ghostty"
-brew "acsandmann/tap/rift"
 cask "karabiner-elements"
 cask "raycast"
 cask "helium-browser"

@@ -22,7 +22,7 @@ defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock tilesize -int 64
 defaults write com.apple.dock expose-group-apps -bool true
 
-# window management is rift's job
+# window management is Spaceman's job
 defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
 
 # finder

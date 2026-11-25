@@ -34,7 +34,6 @@ links=(
 )
 
 macos_links=(
-  "rift/config.toml:$HOME/.config/rift/config.toml"
   "karabiner:$HOME/.config/karabiner"
   "ghostty/config:$HOME/.config/ghostty/config"
   "herdr/config.toml:$HOME/.config/herdr/config.toml"
@@ -208,12 +207,6 @@ install_portless_service() {
   portless service install
 }
 
-install_rift_service() {
-  command -v rift >/dev/null 2>&1 || return 0
-  rift service install
-  rift service start
-}
-
 install_herdr() {
   command -v herdr >/dev/null 2>&1 && return 0
   curl -fsSL https://herdr.dev/install.sh | sh
@@ -297,7 +290,6 @@ if [ "${1:-}" = "--full" ]; then
   install_portless_service
   install_herdr
   if [ "$OS" = Darwin ]; then
-    install_rift_service
     bash "$DOTFILES_DIR/macos/defaults.sh"
   fi
 fi

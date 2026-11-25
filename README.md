@@ -45,7 +45,6 @@ Grant in System Settings → Privacy & Security:
 | app | permission |
 | --- | --- |
 | Karabiner-Elements | Input Monitoring, driver extension (Login Items & Extensions) |
-| Rift | Accessibility (then `rift service restart`) |
 | Wispr Flow | Accessibility, Microphone |
 | 1Password | Accessibility (autofill), browser extension |
 | Ghostty | Full Disk Access (optional) |
@@ -60,7 +59,6 @@ Log out once so keyboard defaults take effect.
 | `zsh/.zshrc` | `~/.zshrc` (interactive: prompt, completions, aliases; sources untracked `~/.zshrc.local` for machine-only lines) |
 | `git/.gitconfig` | `~/.gitconfig` (includes `~/.gitconfig.local` for machine state) |
 | `git/.gitignore_global` | `~/.gitignore_global` |
-| `rift/config.toml` | `~/.config/rift/config.toml` (macOS only) |
 | `karabiner/` | `~/.config/karabiner` (macOS only) |
 | `ghostty/config` | `~/.config/ghostty/config` (macOS only) |
 | `ghostty/shared.conf` | `~/.config/ghostty/shared.conf`, included by either config |
@@ -84,19 +82,10 @@ Log out once so keyboard defaults take effect.
 
 - Ghostty is the terminal, herdr manages agent sessions.
 - Helix is used as a file browser, not an IDE. `L d` / `L l` toggle dark / light theme.
-- Karabiner maps Caps Lock to `Ctrl-Option-Cmd-Shift` (Hyper) for Rift, tap alone for Escape. Not Hyperkey: Rift reads keys before Hyperkey adds the modifiers.
+- Karabiner maps Caps Lock to `Ctrl-Option-Cmd` (Hyper, as Spaceman expects; Spaceman adds Shift for moves), tap alone for Escape.
 - Agents write throwaway output to `.scratch/` in the repo they are working in. It is in
   `~/.gitignore_global`, so it stays inside the workspace without showing up as repo changes.
   `pr-review` uses it.
-
-### Rift
-
-- Focus: `Hyper-h/j/k/l`, workspace: `Hyper-1..9`, monitor: `Hyper-o`
-- Move a window: `Hyper-m`, release, then `h/j/k/l`, a workspace number, `o` (next monitor) or `Tab` (whole workspace to next monitor)
-- Resize: `Hyper-r`, then `h/j/k/l`, `Esc`/`Enter` to leave
-- Split orientation: `Hyper-v`, stack (tab strip): `Hyper-t`, balance: `Hyper-e`, last workspace: `Hyper-Tab`
-- Service: `Hyper-s`, then `h/j/k/l` join, `f` float, `r` unjoin, `` ` `` reload
-- Cancel any mode: `Esc`
 
 ### Not in Homebrew
 
