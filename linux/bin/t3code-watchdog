@@ -8,6 +8,30 @@ STARTUP_GRACE_SECONDS=120
 AUTOSTART_UNIT='app-com.t3tools.T3Code@autostart.service'
 
 AUTOSTART_ENTRY="$HOME/.config/autostart/com.t3tools.T3Code.desktop"
+DESKTOP_SETTINGS="$HOME/.t3/userdata/desktop-settings.json"
+T3_TAILNET_PORT=8443
+T3_LOCAL_URL='http://127.0.0.1:3773'
+
+# `work up --tailscale` needs tailnet port 443 for its preview proxy, but T3
+# serves itself there by default. The app keeps settings in memory and drops a
+# hand-edited port when it next saves, so this re-applies it every run (read at
+# T3's next start) and frees 443 if T3 already reclaimed it. Freeing only
+# happens while T3 is also served on 8443, so it stays reachable.
+keep_t3_off_tailnet_port_443() {
+  if [[ -f "$DESKTOP_SETTINGS" ]] && [[ "$(jq '.tailscaleServePort' "$DESKTOP_SETTINGS")" != "$T3_TAILNET_PORT" ]]; then
+    jq --argjson port "$T3_TAILNET_PORT" '.tailscaleServePort = $port' "$DESKTOP_SETTINGS" >"$DESKTOP_SETTINGS.tmp" &&
+      mv "$DESKTOP_SETTINGS.tmp" "$DESKTOP_SETTINGS"
+  fi
+
+  local serve_web
+  serve_web=$(tailscale serve status --json 2>/dev/null | jq -c '.Web // {}') || return 0
+  local proxy_on_port='to_entries[] | select(.key | endswith(":" + $port)) | .value.Handlers["/"].Proxy'
+  if [[ "$(jq -r --arg port 443 "$proxy_on_port" <<<"$serve_web")" == "$T3_LOCAL_URL" ]] &&
+    [[ "$(jq -r --arg port "$T3_TAILNET_PORT" "$proxy_on_port" <<<"$serve_web")" == "$T3_LOCAL_URL" ]]; then
+    echo "T3 Code reclaimed tailnet port 443; freeing it for work previews (T3 stays on :$T3_TAILNET_PORT)"
+    tailscale serve --https=443 off
+  fi
+}
 
 # The app may rewrite its autostart entry, and since t3code-bin 0.1.6 the
 # /usr/bin/t3code wrapper ignores ~/.config/t3code-flags.conf, so the
@@ -17,6 +41,8 @@ if [[ -f "$AUTOSTART_ENTRY" ]] && ! grep -q '^Exec=/usr/bin/t3code --ozone-platf
   sed -i 's|^Exec=.*|Exec=/usr/bin/t3code --ozone-platform=x11 %U|' "$AUTOSTART_ENTRY"
   systemctl --user daemon-reload
 fi
+
+keep_t3_off_tailnet_port_443
 
 systemctl --user is-active --quiet graphical-session.target || exit 0
 curl -sf -o /dev/null --max-time 5 http://127.0.0.1:3773/ && exit 0
